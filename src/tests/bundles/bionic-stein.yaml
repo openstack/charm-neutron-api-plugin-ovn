@@ -1,0 +1,55 @@
+series: bionic
+applications:
+  keystone:
+    charm: cs:~openstack-charmers-next/keystone
+    num_units: 1
+    options:
+      openstack-origin: cloud:bionic-stein
+  mysql:
+    charm: cs:~openstack-charmers-next/percona-cluster
+    num_units: 1
+  neutron-api:
+    series: bionic
+    charm: /home/frode/Projects/OpenStack/charm-neutron-api
+    num_units: 3
+    options:
+      manage-neutron-plugin-legacy-mode: false
+      openstack-origin: cloud:bionic-stein
+  neutron-api-plugin-ovn:
+    series: bionic
+    charm: neutron-api-plugin-ovn
+  rabbitmq-server:
+    charm: cs:~openstack-charmers-next/rabbitmq-server
+    num_units: 1
+  vault:
+    charm: cs:~openstack-charmers-next/vault
+    num_units: 1
+  ovn:
+    series: bionic
+    charm: /home/frode/Projects/OpenStack/charm-ovn/build/builds/ovn
+    num_units: 3
+    options:
+      source: cloud:bionic-train
+relations:
+- - mysql:shared-db
+  - keystone:shared-db
+- - mysql:shared-db
+  - neutron-api:shared-db
+- - neutron-api:amqp
+  - rabbitmq-server:amqp
+- - neutron-api:identity-service
+  - keystone:identity-service
+- - neutron-api-plugin-ovn:neutron-plugin
+  - neutron-api:neutron-plugin-api-subordinate
+- - neutron-api-plugin-ovn:ovsdb-cms
+  - ovn:ovsdb-cms
+- - vault:shared-db
+  - mysql:shared-db
+- - ovn:certificates
+  - vault:certificates
+- - neutron-api-plugin-ovn:certificates
+  - vault:certificates
+- - keystone:certificates
+  - vault:certificates
+- - neutron-api:certificates
+  - vault:certificates

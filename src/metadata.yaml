@@ -1,0 +1,23 @@
+name: neutron-api-plugin-ovn
+summary: Neutron OVN ML2 plugin
+maintainer: OpenStack Charmers <openstack-charmers@lists.ubuntu.com>
+description: |
+  Subordinate charm that deploys the ``networking-ovn`` component on
+  ``neutron-api`` units and augments Neutron's configuration for use with
+  the OVN ML2 plugin.
+tags:
+  - networking
+series:
+  - bionic
+  - disco
+subordinate: true
+requires:
+  container:
+    interface: juju-info
+    scope: container
+  ovsdb-cms:
+    interface: ovsdb-cms
+provides:
+  neutron-plugin:
+    interface: neutron-plugin-api-subordinate
+    scope: container

@@ -1,0 +1,8 @@
+.tox
+.stestr
+*__pycache__*
+*.pyc
+build
+interfaces
+layers
+*.swp

@@ -1,0 +1,13 @@
+includes:
+  - layer:leadership
+  - layer:openstack
+  - interface:ovsdb-cms
+  - interface:neutron-plugin-api-subordinate
+options:
+  basic:
+    use_venv: True
+    include_system_packages: False
+repo: https://github.com/openstack/charm-neutron-api-plugin-ovn
+config:
+  deletes:
+    - verbose

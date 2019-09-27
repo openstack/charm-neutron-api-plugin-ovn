@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="266.66666"
+   height="266.66666"
+   viewBox="0 0 70.555554 70.555555"
+   version="1.1"
+   id="svg3931"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   sodipodi:docname="icon.svg">
+  <defs
+     id="defs3925">
+    <inkscape:path-effect
+       is_visible="true"
+       id="path-effect3028"
+       effect="spiro" />
+    <inkscape:path-effect
+       is_visible="true"
+       id="path-effect4724"
+       effect="spiro" />
+    <inkscape:path-effect
+       is_visible="true"
+       id="path-effect4720"
+       effect="spiro" />
+    <marker
+       style="overflow:visible"
+       id="Arrow1Lend"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         inkscape:connector-curvature="0"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         id="path3917" />
+    </marker>
+    <inkscape:path-effect
+       is_visible="true"
+       id="path-effect3908"
+       effect="spiro" />
+    <inkscape:path-effect
+       is_visible="true"
+       id="path-effect4724-8"
+       effect="spiro" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.4"
+     inkscape:cx="887.07689"
+     inkscape:cy="18.723436"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="3770"
+     inkscape:window-height="2096"
+     inkscape:window-x="70"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata3928">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-226.44443)">
+    <g
+       id="g4132"
+       transform="matrix(0.13712291,0,0,0.13712291,6.9978915,233.42295)">
+      <g
+         transform="translate(-116.86196,-400.24359)"
+         style="display:inline"
+         id="layer1-6"
+         inkscape:label="Base">
+        <rect
+           ry="19.369202"
+           rx="19.369202"
+           y="410.75735"
+           x="129.53154"
+           height="382.54175"
+           width="382.54175"
+           id="rect2987"
+           style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+        <rect
+           ry="17.49905"
+           rx="23.46236"
+           y="492.37717"
+           x="173.8145"
+           height="219.83182"
+           width="294.74588"
+           id="rect2989"
+           style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+        <flowRoot
+           transform="translate(488.47522,401.2293)"
+           style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:'Bitstream Vera Sans';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none"
+           id="flowRoot3004"
+           xml:space="preserve"><flowRegion
+             id="flowRegion3006"><rect
+               style="fill:#ffffff"
+               y="314.19586"
+               x="-229.67079"
+               height="123.70679"
+               width="149.3353"
+               id="rect3008" /></flowRegion><flowPara
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:60px;line-height:125%;font-family:sans-serif;-inkscape-font-specification:Sans;text-align:start;writing-mode:lr-tb;text-anchor:start"
+             id="flowPara3010">OVN</flowPara></flowRoot>      </g>
+      <g
+         transform="translate(-116.86196,-400.24359)"
+         style="display:inline"
+         inkscape:label="Knobs &amp; Text"
+         id="layer2">
+        <circle
+           transform="translate(-11.541922,-28.674478)"
+           id="path3808"
+           style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           cx="190.08102"
+           cy="482.84048"
+           r="19.116308" />
+        <circle
+           transform="translate(44.364264,-28.674478)"
+           id="path3808-7"
+           style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           cx="190.08102"
+           cy="482.84048"
+           r="19.116308" />
+        <circle
+           transform="translate(130.72139,-28.674478)"
+           id="path3808-7-3"
+           style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           cx="190.08102"
+           cy="482.84048"
+           r="19.116308" />
+        <circle
+           transform="translate(220.55891,-28.674478)"
+           id="path3808-4"
+           style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           cx="190.08102"
+           cy="482.84048"
+           r="19.116308" />
+        <circle
+           transform="translate(276.46511,-28.674478)"
+           id="path3808-7-36"
+           style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           cx="190.08102"
+           cy="482.84048"
+           r="19.116308" />
+        <path
+           sodipodi:nodetypes="cccccccc"
+           inkscape:connector-curvature="0"
+           inkscape:original-d="m 275.17737,567.87881 86.37835,0.73292 v -22.7212 l 41.01417,33.71537 -41.01417,32.98241 v -20.5224 h -86.99979 z"
+           inkscape:path-effect="#path-effect4724"
+           id="path4722"
+           d="m 275.17737,567.87881 86.37835,0.73292 v -22.7212 l 41.01417,33.71537 -41.01417,32.98241 v -20.5224 h -86.99979 z"
+           style="display:inline;fill:#008000;fill-opacity:1;stroke:none" />
+        <path
+           sodipodi:nodetypes="cccccccc"
+           inkscape:connector-curvature="0"
+           inkscape:original-d="m 361.10949,622.65312 -86.37833,0.73294 v -22.72122 l -41.01417,33.71537 41.01417,32.98243 v -20.52241 h 86.99976 z"
+           inkscape:path-effect="#path-effect4724-8"
+           id="path4722-1"
+           d="m 361.10949,622.65312 -86.37833,0.73294 v -22.72122 l -41.01417,33.71537 41.01417,32.98243 v -20.52241 h 86.99976 z"
+           style="display:inline;fill:#008000;fill-opacity:1;stroke:none" />
+      </g>
+    </g>
+  </g>
+</svg>
