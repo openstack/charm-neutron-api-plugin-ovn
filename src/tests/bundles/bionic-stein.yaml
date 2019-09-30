@@ -10,7 +10,7 @@ applications:
     num_units: 1
   neutron-api:
     series: bionic
-    charm: /home/frode/Projects/OpenStack/charm-neutron-api
+    charm: cs:~openstack-charmers-next/neutron-api
     num_units: 3
     options:
       manage-neutron-plugin-legacy-mode: false

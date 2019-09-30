@@ -12,6 +12,6 @@ target_deploy_status:
     workload-status: blocked
     workload-status-message: Vault needs to be initialized
 configure:
-- zaza.openstack.charm_tests.vault.setup.auto_initialize
+- zaza.openstack.charm_tests.vault.setup.auto_initialize_no_validation
 tests:
 - zaza.charm_tests.noop.tests.NoopTest
