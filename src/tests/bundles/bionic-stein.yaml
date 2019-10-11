@@ -24,12 +24,12 @@ applications:
   vault:
     charm: cs:~openstack-charmers-next/vault
     num_units: 1
-  ovn:
+  ovn-central:
     series: bionic
-    charm: /home/frode/Projects/OpenStack/charm-ovn/build/builds/ovn
+    charm: cs:~openstack-charmers-next/ovn-central
     num_units: 3
     options:
-      source: cloud:bionic-train
+      source: cloud:bionic-stein
 relations:
 - - mysql:shared-db
   - keystone:shared-db
@@ -42,10 +42,10 @@ relations:
 - - neutron-api-plugin-ovn:neutron-plugin
   - neutron-api:neutron-plugin-api-subordinate
 - - neutron-api-plugin-ovn:ovsdb-cms
-  - ovn:ovsdb-cms
+  - ovn-central:ovsdb-cms
 - - vault:shared-db
   - mysql:shared-db
-- - ovn:certificates
+- - ovn-central:certificates
   - vault:certificates
 - - neutron-api-plugin-ovn:certificates
   - vault:certificates
