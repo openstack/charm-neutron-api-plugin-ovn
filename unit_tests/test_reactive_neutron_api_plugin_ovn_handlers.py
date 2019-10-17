@@ -65,6 +65,10 @@ class TestOvnHandlers(test_utils.PatchHelper):
             self.charm
         self.provide_charm_instance().__exit__.return_value = None
 
+    def pmock(self, return_value=None):
+        p = mock.PropertyMock().return_value = return_value
+        return p
+
     def test_flag_db_migration(self):
         self.patch_object(handlers.reactive, 'set_flag')
         handlers.flag_db_migration()
@@ -81,6 +85,18 @@ class TestOvnHandlers(test_utils.PatchHelper):
             'lbaasv2',
             'gre,vlan,flat,local',
         ]
+        options = self.charm.adapters_instance.options
+        options.ovn_key = self.pmock('aKey')
+        options.ovn_cert = self.pmock('aCert')
+        options.ovn_ca_cert = self.pmock('aCaCert')
+        options.ovn_l3_scheduler = self.pmock('aSched')
+        options.ovn_metadata_enabled = self.pmock('aMetaData')
+        options.enable_distributed_floating_ip = self.pmock('dont')
+        options.dns_servers = self.pmock('dns1 dns2')
+        options.geneve_vni_ranges = self.pmock('vnia:vniA vnib:vniB')
+        options.dhcp_default_lease_time = self.pmock(42)
+        options.ovn_dhcp4_global_options = self.pmock('a:A4 b:B4')
+        options.ovn_dhcp6_global_options = self.pmock('a:A6 b:B6')
         handlers.configure_neutron()
         neutron.configure_plugin.assert_called_once_with(
             'ovn',
@@ -97,19 +113,24 @@ class TestOvnHandlers(test_utils.PatchHelper):
                             'ovn': [
                                 ('ovn_nb_connection',
                                  ''),  # FIXME
-                                ('ovn_nb_private_key', mock.ANY),
-                                ('ovn_nb_certificate', mock.ANY),
-                                ('ovn_nb_ca_cert', mock.ANY),
+                                ('ovn_nb_private_key', 'aKey'),
+                                ('ovn_nb_certificate', 'aCert'),
+                                ('ovn_nb_ca_cert', 'aCaCert'),
                                 ('ovn_sb_connection',
                                  ''),  # FIXME
-                                ('ovn_sb_private_key', mock.ANY),
-                                ('ovn_sb_certificate', mock.ANY),
-                                ('ovn_sb_ca_cert', mock.ANY),
-                                ('ovn_l3_scheduler', 'leastloaded'),
-                                ('ovn_metadata_enabled', 'true'),
+                                ('ovn_sb_private_key', 'aKey'),
+                                ('ovn_sb_certificate', 'aCert'),
+                                ('ovn_sb_ca_cert', 'aCaCert'),
+                                ('ovn_l3_scheduler', 'aSched'),
+                                ('ovn_metadata_enabled', 'aMetaData'),
+                                ('enable_distributed_floating_ip', 'dont'),
+                                ('dns_servers', 'dns1,dns2'),
+                                ('dhcp_default_lease_time', 42),
+                                ('ovn_dhcp4_global_options', 'a:A4,b:B4'),
+                                ('ovn_dhcp6_global_options', 'a:A6,b:B6'),
                             ],
                             'ml2_type_geneve': [
-                                ('vni_ranges', '1000:2000'),
+                                ('vni_ranges', 'vnia:vniA,vnib:vniB'),
                                 ('max_header_size', '38'),
                             ],
                         },

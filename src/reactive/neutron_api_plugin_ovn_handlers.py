@@ -61,7 +61,42 @@ def configure_neutron():
     tenant_network_types = neutron.neutron_config_data.get(
         'tenant_network_types', '').split(',')
     tenant_network_types.insert(0, 'geneve')
+
+    def _split_if_str(s):
+        _s = s or ''
+        return _s.split()
+
     with charm.provide_charm_instance() as instance:
+        options = instance.adapters_instance.options
+        sections = {
+            'ovn': [
+                ('ovn_nb_connection', ','.join(ovsdb.db_nb_connection_strs)),
+                ('ovn_nb_private_key', options.ovn_key),
+                ('ovn_nb_certificate', options.ovn_cert),
+                ('ovn_nb_ca_cert', options.ovn_ca_cert),
+                ('ovn_sb_connection', ','.join(ovsdb.db_sb_connection_strs)),
+                ('ovn_sb_private_key', options.ovn_key),
+                ('ovn_sb_certificate', options.ovn_cert),
+                ('ovn_sb_ca_cert', options.ovn_ca_cert),
+                ('ovn_l3_scheduler', options.ovn_l3_scheduler),
+                ('ovn_metadata_enabled', options.ovn_metadata_enabled),
+                ('enable_distributed_floating_ip',
+                    options.enable_distributed_floating_ip),
+                ('dns_servers', ','.join(_split_if_str(options.dns_servers))),
+                ('dhcp_default_lease_time', options.dhcp_default_lease_time),
+                ('ovn_dhcp4_global_options',
+                    ','.join(_split_if_str(
+                        options.ovn_dhcp4_global_options))),
+                ('ovn_dhcp6_global_options',
+                    ','.join(
+                        _split_if_str(options.ovn_dhcp6_global_options))),
+            ],
+            'ml2_type_geneve': [
+                ('vni_ranges', ','.join(
+                    _split_if_str(options.geneve_vni_ranges))),
+                ('max_header_size', '38'),
+            ],
+        }
         neutron.configure_plugin(
             'ovn',
             service_plugins=','.join(service_plugins),
@@ -70,35 +105,7 @@ def configure_neutron():
             subordinate_configuration={
                 'neutron-api': {
                     '/etc/neutron/plugins/ml2/ml2_conf.ini': {
-                        'sections': {
-                            'ovn': [
-                                ('ovn_nb_connection',
-                                 ','.join(ovsdb.db_nb_connection_strs)),
-                                ('ovn_nb_private_key',
-                                 instance.adapters_instance.options.ovn_key),
-                                ('ovn_nb_certificate',
-                                 instance.adapters_instance.options.ovn_cert),
-                                ('ovn_nb_ca_cert',
-                                 instance.adapters_instance.options.ovn_ca_cert
-                                 ),
-                                ('ovn_sb_connection',
-                                 ','.join(ovsdb.db_sb_connection_strs)),
-                                ('ovn_sb_private_key',
-                                 instance.adapters_instance.options.ovn_key),
-                                ('ovn_sb_certificate',
-                                 instance.adapters_instance.options.ovn_cert),
-                                ('ovn_sb_ca_cert',
-                                 instance.adapters_instance.options.ovn_ca_cert
-                                 ),
-                                # XXX config
-                                ('ovn_l3_scheduler', 'leastloaded'),
-                                ('ovn_metadata_enabled', 'true'),  # XXX config
-                            ],
-                            'ml2_type_geneve': [
-                                ('vni_ranges', '1000:2000'),  # XXX config
-                                ('max_header_size', '38'),
-                            ],
-                        },
+                        'sections': sections,
                     },
                 },
             },

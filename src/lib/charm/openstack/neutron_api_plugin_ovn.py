@@ -38,7 +38,7 @@ def ovn_ca_cert(cls):
 
 
 class NeutronAPIPluginCharm(charms_openstack.charm.OpenStackCharm):
-    release = 'stein'
+    release = 'train'
     name = 'neutron-api-plugin-ovn'
     packages = ['python3-networking-ovn']
     required_relations = ['neutron-plugin', 'ovsdb-cms']

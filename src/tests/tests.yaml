@@ -1,11 +1,14 @@
 charm_name: neutron-api-plugin-ovn
 smoke_bundles:
-- bionic-stein
+- bionic-train
+gate_bundles:
+- eoan
+- bionic-train
 target_deploy_status:
   neutron-api-plugin-ovn:
     workload-status: waiting
     workload-status-message: "'ovsdb-cms' incomplete"
-  ovn:
+  ovn-central:
     workload-status: blocked
     workload-status-message: "'certificates' missing"
   vault:

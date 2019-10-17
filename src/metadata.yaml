@@ -9,7 +9,7 @@ tags:
   - networking
 series:
   - bionic
-  - disco
+  - eoan
 subordinate: true
 requires:
   container:

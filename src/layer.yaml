@@ -10,4 +10,10 @@ options:
 repo: https://github.com/openstack/charm-neutron-api-plugin-ovn
 config:
   deletes:
+    - debug
     - verbose
+    - ssl_ca
+    - ssl_cert
+    - ssl_key
+    - use-internal-endpoints
+    - use-syslog
