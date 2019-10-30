@@ -52,10 +52,12 @@ class NeutronAPIPluginCharm(charms_openstack.charm.OpenStackCharm):
 
         for tls_object in tls_objects:
             with open(ovn_ca_cert(self.adapters_instance), 'w') as crt:
-                crt.write(
-                    tls_object['ca'] +
-                    os.linesep +
-                    tls_object.get('chain', ''))
+                chain = tls_object.get('chain')
+                if chain:
+                    crt.write(tls_object['ca'] + os.linesep + chain)
+                else:
+                    crt.write(tls_object['ca'])
+
             self.configure_cert(NEUTRON_PLUGIN_ML2_DIR,
                                 tls_object['cert'],
                                 tls_object['key'],
