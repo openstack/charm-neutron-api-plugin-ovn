@@ -1,9 +1,12 @@
 charm_name: neutron-api-plugin-ovn
 smoke_bundles:
-- bionic-train
+- bionic-ussuri
 gate_bundles:
-- eoan
 - bionic-train
+- eoan
+- bionic-ussuri
+dev_bundles:
+- focal
 target_deploy_status:
   neutron-api-plugin-ovn:
     workload-status: waiting
@@ -17,4 +20,4 @@ target_deploy_status:
 configure:
 - zaza.openstack.charm_tests.vault.setup.auto_initialize_no_validation
 tests:
-- zaza.charm_tests.noop.tests.NoopTest
+- zaza.openstack.charm_tests.neutron.tests.NeutronCreateNetworkTest

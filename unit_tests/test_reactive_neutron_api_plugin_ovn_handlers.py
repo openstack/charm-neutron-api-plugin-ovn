@@ -31,16 +31,16 @@ class TestRegisteredHooks(test_utils.TestRegisteredHooks):
         ]
         hook_set = {
             'when_none': {
-                'flag_db_migration': (
+                'maybe_flag_db_migration': (
                     'neutron-plugin.db_migration',
                     'neutron-plugin.available',),
-                'request_db_migration': (
+                'maybe_request_db_migration': (
                     'neutron-plugin.available',
                     'run-default-update-status',),
             },
             'when': {
-                'flag_db_migration': ('charm.installed',),
-                'request_db_migration': ('neutron-plugin.connected',),
+                'maybe_flag_db_migration': ('charm.installed',),
+                'maybe_request_db_migration': ('neutron-plugin.connected',),
                 'configure_neutron': (
                     'neutron-plugin.connected',
                     'ovsdb-cms.available',),
@@ -57,7 +57,6 @@ class TestOvnHandlers(test_utils.PatchHelper):
 
     def setUp(self):
         super().setUp()
-        # self.patch_release(octavia.OctaviaCharm.release)
         self.charm = mock.MagicMock()
         self.patch_object(handlers.charm, 'provide_charm_instance',
                           new=mock.MagicMock())
@@ -69,12 +68,27 @@ class TestOvnHandlers(test_utils.PatchHelper):
         p = mock.PropertyMock().return_value = return_value
         return p
 
-    def test_flag_db_migration(self):
+    def test_maybe_flag_db_migration(self):
         self.patch_object(handlers.reactive, 'set_flag')
-        handlers.flag_db_migration()
+        self.charm.db_migration_needed = self.pmock(False)
+        handlers.maybe_flag_db_migration()
+        self.assertFalse(self.set_flag.called)
+        self.charm.db_migration_needed = self.pmock(True)
+        handlers.maybe_flag_db_migration()
         self.set_flag.assert_called_once_with('neutron-plugin.db_migration')
 
-    def test_request_db_migration(self):
+    def test_maybe_request_db_migration(self):
+        self.patch_object(handlers.reactive, 'endpoint_from_flag')
+        neutron_plugin = mock.MagicMock()
+        self.endpoint_from_flag.return_value = neutron_plugin
+        self.charm.db_migration_needed = self.pmock(False)
+        handlers.maybe_request_db_migration()
+        self.assertFalse(neutron_plugin.request_db_migration.called)
+        self.charm.db_migration_needed = self.pmock(True)
+        handlers.maybe_request_db_migration()
+        neutron_plugin.request_db_migration.assert_called_once_with()
+
+    def test_render(self):
         self.patch_object(handlers.reactive, 'endpoint_from_flag')
         neutron = mock.MagicMock()
         ovsdb = mock.MagicMock()
@@ -97,13 +111,14 @@ class TestOvnHandlers(test_utils.PatchHelper):
         options.dhcp_default_lease_time = self.pmock(42)
         options.ovn_dhcp4_global_options = self.pmock('a:A4 b:B4')
         options.ovn_dhcp6_global_options = self.pmock('a:A6 b:B6')
+        self.charm.service_plugins = self.pmock(['ovn-router'])
         handlers.configure_neutron()
         neutron.configure_plugin.assert_called_once_with(
             'ovn',
             service_plugins=(
                 'firewall_v2,metering,segments,'
                 'neutron_dynamic_routing.services.bgp.bgp_plugin.BgpPlugin,'
-                'lbaasv2,networking_ovn.l3.l3_ovn.OVNL3RouterPlugin'),
+                'lbaasv2,ovn-router'),
             mechanism_drivers='ovn',
             tenant_network_types='geneve,gre,vlan,flat,local',
             subordinate_configuration={
@@ -138,18 +153,3 @@ class TestOvnHandlers(test_utils.PatchHelper):
                 },
             },
         )
-
-    # def test_render(self):
-    #     self.patch_object(handlers.charm, 'use_defaults')
-    #     self.patch_object(handlers.reactive, 'set_flag')
-    #     self.charm.enable_services.return_value = False
-    #     handlers.render()
-    #     self.charm.render_with_interfaces.assert_called_once_with([])
-    #     self.charm.enable_services.assert_called_once_with()
-    #     self.assertFalse(self.use_defaults.called)
-    #     self.assertFalse(self.set_flag.called)
-    #     self.charm.assess_status.assert_called_once_with()
-    #     self.charm.enable_services.return_value = True
-    #     handlers.render()
-    #     self.use_defaults.assert_called_once_with('certificates.available')
-    #     self.set_flag.assert_called_once_with('config.rendered')

@@ -51,7 +51,9 @@ class Helper(test_utils.PatchHelper):
     def setUp(self):
         super().setUp()
         self.patch_release(
-            neutron_api_plugin_ovn.NeutronAPIPluginCharm.release)
+            neutron_api_plugin_ovn.TrainNeutronAPIPluginCharm.release)
+        self.patch_release(
+            neutron_api_plugin_ovn.UssuriNeutronAPIPluginCharm.release)
 
 
 class TestNeutronAPIPluginOvnCharm(Helper):
@@ -72,7 +74,7 @@ class TestNeutronAPIPluginOvnCharm(Helper):
         with mock.patch('builtins.open', create=True) as mocked_open:
             mocked_file = mock.MagicMock(spec=io.FileIO)
             mocked_open.return_value = mocked_file
-            c = neutron_api_plugin_ovn.NeutronAPIPluginCharm()
+            c = neutron_api_plugin_ovn.UssuriNeutronAPIPluginCharm()
             c.configure_cert = mock.MagicMock()
             c.configure_tls()
             mocked_open.assert_called_once_with(

@@ -1,4 +1,4 @@
-series: eoan
+series: focal
 applications:
   keystone-mysql-router:
     charm: cs:~openstack-charmers-next/mysql-router
@@ -22,7 +22,7 @@ applications:
       neutron-security-groups: true
       openstack-origin: distro
   neutron-api-plugin-ovn:
-    series: eoan
+    series: focal
     charm: cs:~openstack-charmers-next/neutron-api-plugin-ovn
   rabbitmq-server:
     charm: cs:~openstack-charmers-next/rabbitmq-server

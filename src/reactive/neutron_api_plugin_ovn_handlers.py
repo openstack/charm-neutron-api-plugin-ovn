@@ -26,6 +26,7 @@ charms_openstack.bus.discover()
 charm.use_defaults(
     'charm.installed',
     'config.changed',
+    'charm.default-select-release',
     'update-status',
     'upgrade-charm',
     'certificates.available',
@@ -35,15 +36,19 @@ charm.use_defaults(
 @reactive.when_none('neutron-plugin.db_migration',
                     'neutron-plugin.available')
 @reactive.when('charm.installed')
-def flag_db_migration():
-    reactive.set_flag('neutron-plugin.db_migration')
+def maybe_flag_db_migration():
+    with charm.provide_charm_instance() as instance:
+        if instance.db_migration_needed:
+            reactive.set_flag('neutron-plugin.db_migration')
 
 
 @reactive.when_none('neutron-plugin.available', 'run-default-update-status')
 @reactive.when('neutron-plugin.connected')
-def request_db_migration():
+def maybe_request_db_migration():
     neutron = reactive.endpoint_from_flag('neutron-plugin.connected')
-    neutron.request_db_migration()
+    with charm.provide_charm_instance() as instance:
+        if instance.db_migration_needed:
+            neutron.request_db_migration()
 
 
 @reactive.when('neutron-plugin.connected', 'ovsdb-cms.available')
@@ -57,7 +62,6 @@ def configure_neutron():
     service_plugins = neutron.neutron_config_data.get(
         'service_plugins', '').split(',')
     service_plugins = [svc for svc in service_plugins if svc not in ['router']]
-    service_plugins.append('networking_ovn.l3.l3_ovn.OVNL3RouterPlugin')
     tenant_network_types = neutron.neutron_config_data.get(
         'tenant_network_types', '').split(',')
     tenant_network_types.insert(0, 'geneve')
@@ -67,6 +71,7 @@ def configure_neutron():
         return _s.split()
 
     with charm.provide_charm_instance() as instance:
+        service_plugins.extend(instance.service_plugins)
         options = instance.adapters_instance.options
         sections = {
             'ovn': [
@@ -74,7 +79,11 @@ def configure_neutron():
                 ('ovn_nb_private_key', options.ovn_key),
                 ('ovn_nb_certificate', options.ovn_cert),
                 ('ovn_nb_ca_cert', options.ovn_ca_cert),
-                ('ovn_sb_connection', ','.join(ovsdb.db_sb_connection_strs)),
+                # NOTE(fnordahl): Tactical workaround for LP: #1864640
+                ('ovn_sb_connection', ','.join(
+                    ovsdb.db_connection_strs(
+                        ovsdb.cluster_remote_addrs,
+                        ovsdb.db_sb_port + 10000))),
                 ('ovn_sb_private_key', options.ovn_key),
                 ('ovn_sb_certificate', options.ovn_cert),
                 ('ovn_sb_ca_cert', options.ovn_ca_cert),
@@ -111,16 +120,3 @@ def configure_neutron():
             },
         )
         instance.assess_status()
-
-
-@reactive.when('neutron-plugin.available')
-def assess_status():
-    with charm.provide_charm_instance() as instance:
-        instance.assess_status()
-
-
-@reactive.when('ovsdb-cms.available')
-def poke_ovsdb():
-    ovsdb = reactive.endpoint_from_flag('ovsdb-cms.available')
-    ch_core.hookenv.log('DEBUG: cluster_remote_addrs="{}"'
-                        .format(list(ovsdb.cluster_remote_addrs)))
