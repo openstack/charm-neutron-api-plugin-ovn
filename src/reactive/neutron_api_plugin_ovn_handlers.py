@@ -99,6 +99,13 @@ def configure_neutron():
                 ('ovn_dhcp6_global_options',
                     ','.join(
                         _split_if_str(options.ovn_dhcp6_global_options))),
+                # NOTE(fnordahl): will be used on chassis with DPDK enabled
+                #
+                # Neutron will make per chassis decisions based on chassis
+                # configuration whether vif_type will be 'ovs' or 'vhostuser'.
+                # This allows having a mix of DPDK and non-DPDK nodes in the
+                # same deployment.
+                ('vhost_sock_dir', '/run/libvirt-vhost-user'),
             ],
             'ml2_type_geneve': [
                 ('vni_ranges', ','.join(
