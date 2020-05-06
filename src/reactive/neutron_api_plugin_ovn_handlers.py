@@ -59,19 +59,18 @@ def configure_neutron():
         'ovsdb-cms.available')
     ch_core.hookenv.log('DEBUG: neutron_config_data="{}"'
                         .format(neutron.neutron_config_data))
-    service_plugins = neutron.neutron_config_data.get(
-        'service_plugins', '').split(',')
-    service_plugins = [svc for svc in service_plugins if svc not in ['router']]
-    tenant_network_types = neutron.neutron_config_data.get(
-        'tenant_network_types', '').split(',')
-    tenant_network_types.insert(0, 'geneve')
 
     def _split_if_str(s):
         _s = s or ''
         return _s.split()
 
     with charm.provide_charm_instance() as instance:
-        service_plugins.extend(instance.service_plugins)
+        mechanism_drivers = instance.mechanism_drivers(
+            neutron.neutron_config_data.get('mechanism_drivers'))
+        service_plugins = instance.service_plugins(
+            neutron.neutron_config_data.get('service_plugins'))
+        tenant_network_types = instance.tenant_network_types(
+            neutron.neutron_config_data.get('tenant_network_types'))
         options = instance.adapters_instance.options
         sections = {
             'ovn': [
@@ -116,7 +115,7 @@ def configure_neutron():
         neutron.configure_plugin(
             'ovn',
             service_plugins=','.join(service_plugins),
-            mechanism_drivers='ovn',
+            mechanism_drivers=','.join(mechanism_drivers),
             tenant_network_types=','.join(tenant_network_types),
             subordinate_configuration={
                 'neutron-api': {

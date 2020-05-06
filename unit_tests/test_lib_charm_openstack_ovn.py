@@ -87,3 +87,32 @@ class TestNeutronAPIPluginOvnCharm(Helper):
                 'fakekey',
                 cn='host',
             )
+
+    def test_service_plugins(self):
+        c = neutron_api_plugin_ovn.UssuriNeutronAPIPluginCharm()
+        svc_plugins = (
+            'router,firewall,firewall_v2,metering,segments,log,'
+            'neutron_dynamic_routing.services.bgp.bgp_plugin.BgpPlugin,'
+            'lbaasv2,port_forwarding,vpnaas')
+        expect = [
+            'metering',
+            'segments',
+            'lbaasv2',
+            'ovn-router',
+        ]
+        self.assertEquals(c.service_plugins(svc_plugins), expect)
+
+    def test_mechanism_drivers(self):
+        c = neutron_api_plugin_ovn.UssuriNeutronAPIPluginCharm()
+        mech_drivers = 'openvswitch,hyperv,l2population,sriovnicswitch'
+        expect = [
+            'ovn',
+            'sriovnicswitch',
+        ]
+        self.assertEquals(c.mechanism_drivers(mech_drivers), expect)
+
+    def test_tenant_network_types(self):
+        c = neutron_api_plugin_ovn.UssuriNeutronAPIPluginCharm()
+        network_types = 'gre,vlan,flat,local'
+        expect = ['geneve', 'gre', 'vlan', 'flat', 'local']
+        self.assertEquals(c.tenant_network_types(network_types), expect)

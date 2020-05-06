@@ -64,6 +64,14 @@ class TestOvnHandlers(test_utils.PatchHelper):
             self.charm
         self.provide_charm_instance().__exit__.return_value = None
 
+    def patch_charm(self, attr, return_value=None):
+        mocked = mock.patch.object(self.charm, attr)
+        self._patches[attr] = mocked
+        started = mocked.start()
+        started.return_value = return_value
+        self._patches_start[attr] = started
+        setattr(self, attr, started)
+
     def pmock(self, return_value=None):
         p = mock.PropertyMock().return_value = return_value
         return p
@@ -93,12 +101,15 @@ class TestOvnHandlers(test_utils.PatchHelper):
         neutron = mock.MagicMock()
         ovsdb = mock.MagicMock()
         self.endpoint_from_flag.side_effect = [neutron, ovsdb]
-        neutron.neutron_config_data.get.side_effect = [
-            'router,firewall_v2,metering,segments,'
-            'neutron_dynamic_routing.services.bgp.bgp_plugin.BgpPlugin,'
-            'lbaasv2',
-            'gre,vlan,flat,local',
-        ]
+        neutron.neutron_config_data.get.side_effect = lambda x: {
+            'mechanism_drivers': (
+                'openvswitch,hyperv,l2population,sriovnicswitch'),
+            'service_plugins': (
+                'router,firewall_v2,metering,segments,'
+                'neutron_dynamic_routing.services.bgp.bgp_plugin.BgpPlugin,'
+                'lbaasv2'),
+            'tenant_network_types': 'gre,vlan,flat,local',
+        }.get(x)
         options = self.charm.adapters_instance.options
         options.ovn_key = self.pmock('aKey')
         options.ovn_cert = self.pmock('aCert')
@@ -111,15 +122,19 @@ class TestOvnHandlers(test_utils.PatchHelper):
         options.dhcp_default_lease_time = self.pmock(42)
         options.ovn_dhcp4_global_options = self.pmock('a:A4 b:B4')
         options.ovn_dhcp6_global_options = self.pmock('a:A6 b:B6')
-        self.charm.service_plugins = self.pmock(['ovn-router'])
+        self.patch_charm('mechanism_drivers')
+        self.mechanism_drivers.return_value = ['ovn', 'sriovnicswitch']
+        self.patch_charm('service_plugins')
+        self.service_plugins.return_value = [
+            'metering', 'segments', 'lbaasv2', 'ovn-router']
+        self.patch_charm('tenant_network_types')
+        self.tenant_network_types.return_value = [
+            'geneve', 'gre', 'vlan', 'flat', 'local']
         handlers.configure_neutron()
         neutron.configure_plugin.assert_called_once_with(
             'ovn',
-            service_plugins=(
-                'firewall_v2,metering,segments,'
-                'neutron_dynamic_routing.services.bgp.bgp_plugin.BgpPlugin,'
-                'lbaasv2,ovn-router'),
-            mechanism_drivers='ovn',
+            service_plugins='metering,segments,lbaasv2,ovn-router',
+            mechanism_drivers='ovn,sriovnicswitch',
             tenant_network_types='geneve,gre,vlan,flat,local',
             subordinate_configuration={
                 'neutron-api': {
