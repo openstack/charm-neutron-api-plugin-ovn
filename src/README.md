@@ -2,11 +2,10 @@
 
 OVN provides open source network virtualization for Open vSwitch (OVS).
 
-Subordinate charm that deploys the ``networking-ovn`` component on
-``neutron-api`` units and augments Neutron's configuration for use with
-the OVN ML2 plugin.
-
-> **Note**: The OVN charms are considered preview charms.
+The neutron-api-plugin-ovn charm is a subordinate charm that augments Neutron's
+configuration for use with the OVN ML2 driver.  On OpenStack Ussuri and onwards
+the OVN ML2 driver is maintained as an in-tree driver in Neutron.  On OpenStack
+Train it is maintained separately as the ``networking-ovn`` plugin.
 
 # Usage
 
@@ -14,10 +13,12 @@ OVN makes use of Public Key Infrastructure (PKI) to authenticate and authorize
 control plane communication.  The charm requires a Certificate Authority to be
 present in the model as represented by the `certificates` relation.
 
-There is an [OVN overlay bundle](https://github.com/openstack-charmers/openstack-bundles/blob/master/development/overlays/openstack-base-ovn.yaml)
-for use in conjunction with the [OpenStack Base bundle](https://github.com/openstack-charmers/openstack-bundles/blob/master/development/openstack-base-bionic-train/bundle.yaml)
-which give an example of how you can automate certificate lifecycle management
-with the help from [Vault](https://jaas.ai/vault/).
+The [OpenStack Base bundle][openstack-base-bundle] gives an example of how you
+can deploy OpenStack and OVN with [Vault][charm-vault] to automate certificate
+lifecycle management.
+
+Please refer to the [OVN Appendix][ovn-cdg] in the
+[OpenStack Charms Deployment Guide][cdg] for details.
 
 To deploy (partial deployment of linked charms only):
 
@@ -37,6 +38,15 @@ To deploy (partial deployment of linked charms only):
 
 # Bugs
 
-Please report bugs on [Launchpad](https://bugs.launchpad.net/charm-neutron-api-plugin-ovn/+filebug).
+Please report bugs on [Launchpad][lp-neutron-api-plugin-ovn].
 
-For general questions please refer to the OpenStack [Charm Guide](https://docs.openstack.org/charm-guide/latest/).
+For general questions please refer to the OpenStack [Charm Guide][cg].
+
+<!-- LINKS -->
+
+[cdg]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/latest/
+[ovn-cdg]: https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/latest/app-ovn.html
+[cg]: https://docs.openstack.org/charm-guide/latest/
+[lp-neutron-api-plugin-ovn]: https://bugs.launchpad.net/charm-neutron-api-plugin-ovn/+filebug
+[charm-vault]: https://jaas.ai/vault/
+[openstack-base-bundle]: https://github.com/openstack-charmers/openstack-bundles/blob/master/development/openstack-base-bionic-ussuri-ovn/bundle.yaml
