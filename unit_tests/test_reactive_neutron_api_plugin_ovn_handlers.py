@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import mock
+from unittest import mock
 
 import reactive.neutron_api_plugin_ovn_handlers as handlers
 
