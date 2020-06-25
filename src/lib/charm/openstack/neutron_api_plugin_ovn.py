@@ -18,6 +18,7 @@ import charms_openstack.adapters
 import charms_openstack.charm
 
 
+CERT_RELATION = 'certificates'
 NEUTRON_PLUGIN_ML2_DIR = '/etc/neutron/plugins/ml2'
 
 
@@ -64,7 +65,7 @@ def ovn_ca_cert(cls):
 class BaseNeutronAPIPluginCharm(charms_openstack.charm.OpenStackCharm):
     abstract_class = True
     name = 'neutron-api-plugin-ovn'
-    required_relations = ['neutron-plugin', 'ovsdb-cms']
+    required_relations = [CERT_RELATION, 'neutron-plugin', 'ovsdb-cms']
     python_version = 3
     release_pkg = version_package = 'neutron-common'
     # make sure we can write secrets readable by the ``neutron-server`` process
@@ -119,6 +120,42 @@ class BaseNeutronAPIPluginCharm(charms_openstack.charm.OpenStackCharm):
                                 tls_object['cert'],
                                 tls_object['key'],
                                 cn='host')
+
+    def states_to_check(self, required_relations=None):
+        """Override parent method to add custom messaging.
+
+        Note that this method will only override the messaging for certain
+        relations, any relations we don't know about will get the default
+        treatment from the parent method.
+
+        :param required_relations: Override `required_relations` class instance
+                                   variable.
+        :type required_relations: Optional[List[str]]
+        :returns: Map of relation name to flags to check presence of
+                  accompanied by status and message.
+        :rtype: collections.OrderedDict[str, List[Tuple[str, str, str]]]
+        """
+        # Retrieve default state map
+        states_to_check = super().states_to_check(
+            required_relations=required_relations)
+
+        # The parent method will always return a OrderedDict
+        if CERT_RELATION in states_to_check:
+            # for the certificates relation we want to replace all messaging
+            states_to_check[CERT_RELATION] = [
+                # the certificates relation has no connected state
+                ('{}.available'.format(CERT_RELATION),
+                 'blocked',
+                 "'{}' missing".format(CERT_RELATION)),
+                # we cannot proceed until Vault have provided server
+                # certificates
+                ('{}.server.certs.available'.format(CERT_RELATION),
+                 'waiting',
+                 "'{}' awaiting server certificate data"
+                 .format(CERT_RELATION)),
+            ]
+
+        return states_to_check
 
     @property
     def db_migration_needed(self):

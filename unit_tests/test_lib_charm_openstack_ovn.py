@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import collections
 import io
-import mock
 import os
+import unittest.mock as mock
 
 import charms_openstack.test_utils as test_utils
 
@@ -87,6 +88,30 @@ class TestNeutronAPIPluginOvnCharm(Helper):
                 'fakekey',
                 cn='host',
             )
+
+    def test_states_to_check(self):
+        self.maxDiff = None
+        c = neutron_api_plugin_ovn.UssuriNeutronAPIPluginCharm()
+        expect = collections.OrderedDict([
+            ('certificates', [
+                ('certificates.available', 'blocked',
+                 "'certificates' missing"),
+                ('certificates.server.certs.available',
+                 'waiting',
+                 "'certificates' awaiting server certificate data")]),
+            ('neutron-plugin', [
+                ('neutron-plugin.connected',
+                 'blocked',
+                 "'neutron-plugin' missing"),
+                ('neutron-plugin.available',
+                 'waiting',
+                 "'neutron-plugin' incomplete")]),
+            ('ovsdb-cms', [
+                ('ovsdb-cms.connected', 'blocked', "'ovsdb-cms' missing"),
+                ('ovsdb-cms.available', 'waiting', "'ovsdb-cms' incomplete")]),
+
+        ])
+        self.assertDictEqual(c.states_to_check(), expect)
 
     def test_service_plugins(self):
         c = neutron_api_plugin_ovn.UssuriNeutronAPIPluginCharm()
