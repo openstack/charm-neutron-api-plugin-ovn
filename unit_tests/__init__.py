@@ -35,6 +35,8 @@ class _fake_decorator(object):
 
 charms = mock.MagicMock()
 sys.modules['charms'] = charms
+charms.layer = mock.MagicMock()
+sys.modules['charms.layer'] = charms.layer
 charms.leadership = mock.MagicMock()
 sys.modules['charms.leadership'] = charms.leadership
 charms.reactive = mock.MagicMock()
@@ -60,3 +62,5 @@ sys.modules['charms.reactive.flags'] = charms.reactive.flags
 sys.modules['charms.reactive.relations'] = charms.reactive.relations
 netaddr = mock.MagicMock()
 sys.modules['netaddr'] = netaddr
+oslo_config = mock.MagicMock()
+sys.modules['oslo_config'] = oslo_config

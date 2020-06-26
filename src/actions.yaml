@@ -1,0 +1,56 @@
+migrate-ovn-db:
+  description: |
+    Run the Neutron OVN DB Sync utility.
+  params:
+    i-really-mean-it:
+      type: boolean
+      default: false
+      description: |
+        The default of false will cause the action to perform a dry-run and log
+        output. Set to true to perform the actual sync.
+        .
+        NOTE: The neutron-api units should be paused while running this action.
+  required:
+    - i-really-mean-it
+migrate-mtu:
+  description: |
+    Reduce MTU on overlay networks prior to migration to Geneve.
+  params:
+    i-really-mean-it:
+      type: boolean
+      default: false
+      description: |
+        The default of false will cause the action to verify that all overlay
+        networks have been adjusted. Set to true to perform the actual
+        migration.
+        .
+        NOTE: To avoid connectivity issues, running instances should already
+        have been reconfigured with a lower MTU prior to running this action.
+        .
+        NOTE: The neutron-api units should NOT be paused while running this
+        action.
+  required:
+    - i-really-mean-it
+offline-neutron-morph-db:
+  description: |
+    Perform optional offline morphing of tunnel networks in Neutron DB.
+  params:
+    i-really-mean-it:
+      type: boolean
+      default: false
+      description: |
+        The default of false will cause the action to not commit the database
+        transaction, effectively performing a dry run. Set to true to perform
+        the actual operation.
+        .
+        NOTE: Performing this action is optional and will allow migrated
+        networks to show as type 'geneve' to the end user of the cloud which
+        also allows other `openstack network set` operations to succeed
+        post-migration.
+        .
+        NOTE: Before running this action you should make a backup of the
+        Neutron database.
+        .
+        NOTE: The neutron-api units MUST be paused while running this action.
+  required:
+    - i-really-mean-it

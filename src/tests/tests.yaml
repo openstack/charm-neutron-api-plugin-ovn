@@ -1,6 +1,6 @@
 charm_name: neutron-api-plugin-ovn
 smoke_bundles:
-- bionic-ussuri
+- focal-ussuri
 gate_bundles:
 - bionic-train
 - bionic-ussuri
