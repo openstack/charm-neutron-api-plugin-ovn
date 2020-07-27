@@ -5,6 +5,9 @@ gate_bundles:
 - bionic-train
 - bionic-ussuri
 - focal-ussuri
+dev_bundles:
+- focal-victoria
+- groovy-victoria
 target_deploy_status:
   neutron-api-plugin-ovn:
     workload-status: waiting
@@ -28,4 +31,4 @@ tests:
 - zaza.openstack.charm_tests.neutron.tests.NeutronNetworkingTest
 tests_options:
   force_deploy:
-    - focal-ussuri
+    - groovy-victoria
