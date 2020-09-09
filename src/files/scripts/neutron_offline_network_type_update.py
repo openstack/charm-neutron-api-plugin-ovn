@@ -128,6 +128,22 @@ def usage(program):
           file=sys.stderr)
 
 
+def vni_row_name(network_type):
+    """Determine name of row for VNI in allocations table.
+
+    :param network_type: Network type to determine row name for.
+    :type network_type: str
+    :returns: Row name
+    :rtype: str
+    :raises: ValueError
+    """
+    if network_type in ('gre',):
+        return '{}_id'.format(network_type)
+    elif network_type in ('geneve', 'vxlan'):
+        return '{}_vni'.format(network_type)
+    raise ValueError('Unsupported network_type: {}'.format(network_type))
+
+
 def allocate_segment(db_session, network_type):
     """Allocate VNI for network_type.
 
@@ -139,7 +155,7 @@ def allocate_segment(db_session, network_type):
     :rtype: int
     """
     alloc_table = 'ml2_{}_allocations'.format(network_type)
-    vni_row = '{}_vni'.format(network_type)
+    vni_row = vni_row_name(network_type)
 
     # Get next available VNI
     vni = None
@@ -173,7 +189,7 @@ def deallocate_segment(db_session, network_type, vni):
     :type vni: int
     """
     alloc_table = 'ml2_{}_allocations'.format(network_type)
-    vni_row = '{}_vni'.format(network_type)
+    vni_row = vni_row_name(network_type)
 
     # De-allocate VNI
     stmt = sqlalchemy.text(
