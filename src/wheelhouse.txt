@@ -1,2 +1,6 @@
 zipp<2.0.0
 oslo_config
+
+git+https://opendev.org/openstack/charms.openstack.git@stable/20.10#egg=charms.openstack
+
+git+https://github.com/juju/charm-helpers.git@stable/20.10#egg=charmhelpers
