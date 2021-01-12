@@ -9,7 +9,6 @@ tags:
 - networking
 series:
 - bionic
-- eoan
 - focal
 - groovy
 subordinate: true
