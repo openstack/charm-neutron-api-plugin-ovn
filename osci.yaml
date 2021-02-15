@@ -1,0 +1,14 @@
+- project:
+    templates:
+      - charm-unit-jobs
+    check:
+      jobs:
+      - charm-build
+      - bionic-train
+      - bionic-ussuri
+      - focal-ussuri
+      - focal-victoria
+      - groovy-victoria
+    vars:
+      needs_charm_build: true
+      charm_build_name: neutron-api-plugin-ovn
