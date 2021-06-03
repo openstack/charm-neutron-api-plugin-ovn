@@ -12,6 +12,7 @@ series:
 - focal
 - groovy
 - hirsute
+- impish
 subordinate: true
 requires:
   container:
