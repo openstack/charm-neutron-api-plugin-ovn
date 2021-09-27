@@ -9,10 +9,12 @@ gate_bundles:
 - focal-ussuri
 - focal-victoria
 - focal-wallaby
-- groovy-victoria
+- hirsute-wallaby
 
 dev_bundles:
-- hirsute-wallaby
+- focal-xena
+- groovy-victoria
+- impish-xena
 
 target_deploy_status:
   neutron-api-plugin-ovn:
@@ -40,4 +42,5 @@ tests:
 
 tests_options:
   force_deploy:
-    - hirsute-wallaby
+    - groovy-victoria
+    - impish-xena
