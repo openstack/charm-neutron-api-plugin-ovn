@@ -9,7 +9,7 @@ tags:
 - networking
 series:
 - focal
-- impish
+- jammy
 subordinate: true
 requires:
   container:
