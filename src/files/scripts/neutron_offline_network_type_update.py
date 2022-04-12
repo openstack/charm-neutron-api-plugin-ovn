@@ -164,7 +164,10 @@ def allocate_segment(db_session, network_type):
         .format(vni_row, alloc_table))
     rs = db_session.execute(stmt)
     for row in rs:
-        vni = next(row.itervalues())
+        if hasattr(row, 'itervalues'):
+            vni = next(row.itervalues())
+        else:
+            vni = next(iter(row))
         # A aggregated query will always provide a result, check for NULL
         if vni is None:
             raise NotFound(
@@ -215,7 +218,10 @@ def get_network_segments(db_session, network_type):
         '      network_type=:network_type')
     rs = db_session.execute(stmt, {'network_type': network_type})
     for row in rs:
-        yield row.values()
+        if hasattr(row, 'values'):
+            yield row.values()
+        else:
+            yield row
 
 
 def morph_networks(db_session, from_network_type, to_network_type):
