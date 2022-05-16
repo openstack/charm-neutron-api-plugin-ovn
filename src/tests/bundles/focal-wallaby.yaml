@@ -8,29 +8,29 @@ series: &series focal
 applications:
   keystone-mysql-router:
     charm: ch:mysql-router
-    channel: 8.0.19/edge
+    channel: 8.0/edge
   nova-mysql-router:
     charm: ch:mysql-router
-    channel: 8.0.19/edge
+    channel: 8.0/edge
   glance-mysql-router:
     charm: ch:mysql-router
-    channel: 8.0.19/edge
+    channel: 8.0/edge
   neutron-mysql-router:
     charm: ch:mysql-router
-    channel: 8.0.19/edge
+    channel: 8.0/edge
   placement-mysql-router:
     charm: ch:mysql-router
-    channel: 8.0.19/edge
+    channel: 8.0/edge
   vault-mysql-router:
     charm: ch:mysql-router
-    channel: 8.0.19/edge
+    channel: 8.0/edge
   mysql-innodb-cluster:
     constraints: mem=3072M
     charm: ch:mysql-innodb-cluster
     num_units: 3
     options:
       source: *openstack-origin
-    channel: 8.0.19/edge
+    channel: 8.0/edge
   rabbitmq-server:
     charm: ch:rabbitmq-server
     num_units: 1
@@ -46,7 +46,7 @@ applications:
     num_units: 3
     options:
       source: *openstack-origin
-    channel: openstack-xena/edge
+    channel: 21.09/edge
   neutron-api-plugin-ovn:
     charm: ../../../neutron-api-plugin-ovn.charm
   hacluster-neutron-api:
@@ -85,7 +85,7 @@ applications:
     channel: xena/edge
   ovn-chassis:
     charm: ch:ovn-chassis
-    channel: openstack-xena/edge
+    channel: 21.09/edge
   nova-compute:
     constraints: "root-disk=20G mem=4G"
     charm: ch:nova-compute
