@@ -1,20 +1,13 @@
 charm_name: neutron-api-plugin-ovn
 
 smoke_bundles:
-- focal-ussuri
+- focal-wallaby
 
 gate_bundles:
-- bionic-train
-- bionic-ussuri
-- focal-ussuri
 - focal-victoria
 - focal-wallaby
-- hirsute-wallaby
 
-dev_bundles:
-- focal-xena
-- groovy-victoria
-- impish-xena
+dev_bundles: []
 
 target_deploy_status:
   neutron-api-plugin-ovn:
@@ -41,6 +34,4 @@ tests:
 - zaza.openstack.charm_tests.neutron.tests.NeutronNetworkingTest
 
 tests_options:
-  force_deploy:
-    - groovy-victoria
-    - impish-xena
+  force_deploy: []
