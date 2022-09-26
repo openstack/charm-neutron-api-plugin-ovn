@@ -1,9 +1,31 @@
+- job:
+    name: focal-wallaby-ovn-22.03
+    description: Run a functional test against focal-wallaby with OVN 22.03
+    parent: func-target-pre-jobs
+    dependencies:
+      - tox-py38
+      - osci-lint
+      - charm-build
+    vars:
+      tox_extra_args: focal-wallaby-ovn-22.03
+- job:
+    name: focal-xena-ovn-22.03
+    description: Run a functional test against focal-xena with OVN 22.03
+    parent: func-target-pre-jobs
+    dependencies:
+      - tox-py38
+      - osci-lint
+      - charm-build
+    vars:
+      tox_extra_args: focal-xena-ovn-22.03
 - project:
     templates:
       - charm-unit-jobs-py38
     check:
       jobs:
+      - focal-wallaby-ovn-22.03
       - focal-wallaby
+      - focal-xena-ovn-22.03
       - focal-xena
     vars:
       needs_charm_build: true
