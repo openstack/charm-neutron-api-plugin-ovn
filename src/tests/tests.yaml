@@ -7,6 +7,7 @@ gate_bundles:
 - bionic-train
 - bionic-ussuri
 - focal-ussuri
+- focal-ussuri-ovn-22.03
 
 dev_bundles: []
 

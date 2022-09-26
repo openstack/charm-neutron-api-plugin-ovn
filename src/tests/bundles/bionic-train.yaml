@@ -1,4 +1,4 @@
-local_overlay_enabled: False
+local_overlay_enabled: True
 
 variables:
   openstack-origin: &openstack-origin cloud:bionic-train
@@ -33,7 +33,7 @@ applications:
     charm: ../../../neutron-api-plugin-ovn.charm
   hacluster-neutron-api:
     charm: ch:hacluster
-    channel: 2.0.3/edge
+    channel: 2.0.3/stable
   neutron-api:
     charm: ch:neutron-api
     series: *series

@@ -1,18 +1,36 @@
 local_overlay_enabled: True
 
 variables:
-  openstack-origin: &openstack-origin cloud:bionic-ussuri
+  openstack-origin: &openstack-origin distro
 
-series: &series bionic
+series: &series focal
 
 applications:
-  percona-cluster:
+  keystone-mysql-router:
+    charm: ch:mysql-router
+    channel: 8.0/edge
+  nova-mysql-router:
+    charm: ch:mysql-router
+    channel: 8.0/edge
+  glance-mysql-router:
+    charm: ch:mysql-router
+    channel: 8.0/edge
+  neutron-mysql-router:
+    charm: ch:mysql-router
+    channel: 8.0/edge
+  placement-mysql-router:
+    charm: ch:mysql-router
+    channel: 8.0/edge
+  vault-mysql-router:
+    charm: ch:mysql-router
+    channel: 8.0/edge
+  mysql-innodb-cluster:
     constraints: mem=3072M
-    charm: ch:percona-cluster
-    num_units: 1
+    charm: ch:mysql-innodb-cluster
+    num_units: 3
     options:
       source: *openstack-origin
-    channel: 5.7/edge
+    channel: 8.0/edge
   rabbitmq-server:
     charm: ch:rabbitmq-server
     num_units: 1
@@ -22,13 +40,13 @@ applications:
   vault:
     charm: ch:vault
     num_units: 1
-    channel: 1.6/edge
+    channel: 1.7/edge
   ovn-central:
     charm: ch:ovn-central
     num_units: 3
     options:
       source: *openstack-origin
-    channel: 20.03/edge
+    channel: 22.03/edge
   neutron-api-plugin-ovn:
     charm: ../../../neutron-api-plugin-ovn.charm
   hacluster-neutron-api:
@@ -39,6 +57,9 @@ applications:
     series: *series
     num_units: 3
     options:
+      # NOTE(fnordahl): At current state of upstream Neutron development this
+      # is a requirement.  Remove once fixed upstream.
+      enable-ml2-port-security: true
       flat-network-providers: physnet1
       neutron-security-groups: true
       openstack-origin: *openstack-origin
@@ -64,7 +85,7 @@ applications:
     channel: ussuri/edge
   ovn-chassis:
     charm: ch:ovn-chassis
-    channel: 20.03/edge
+    channel: 22.03/edge
   nova-compute:
     constraints: "root-disk=20G mem=4G"
     charm: ch:nova-compute
@@ -85,18 +106,12 @@ applications:
 relations:
   - - hacluster-neutron-api:ha
     - neutron-api:ha
-  - - neutron-api:shared-db
-    - percona-cluster:shared-db
   - - neutron-api:amqp
     - rabbitmq-server:amqp
   - - neutron-api:neutron-api
     - nova-cloud-controller:neutron-api
   - - neutron-api:identity-service
     - keystone:identity-service
-  - - keystone:shared-db
-    - percona-cluster:shared-db
-  - - nova-cloud-controller:shared-db
-    - percona-cluster:shared-db
   - - nova-cloud-controller:amqp
     - rabbitmq-server:amqp
   - - nova-compute:amqp
@@ -107,24 +122,18 @@ relations:
     - nova-compute:cloud-compute
   - - glance:identity-service
     - keystone:identity-service
-  - - glance:shared-db
-    - percona-cluster:shared-db
   - - glance:amqp
     - rabbitmq-server:amqp
   - - nova-compute:image-service
     - glance:image-service
   - - nova-cloud-controller:image-service
     - glance:image-service
-  - - placement:shared-db
-    - percona-cluster:shared-db
   - - placement:identity-service
     - keystone:identity-service
   - - placement:placement
     - nova-cloud-controller:placement
   - - neutron-api-plugin-ovn:neutron-plugin
     - neutron-api:neutron-plugin-api-subordinate
-  - - vault:shared-db
-    - percona-cluster:shared-db
   - - ovn-central:certificates
     - vault:certificates
   - - ovn-central:ovsdb-cms
@@ -147,3 +156,15 @@ relations:
     - nova-cloud-controller:certificates
   - - vault:certificates
     - placement:certificates
+  - ["keystone:shared-db", "keystone-mysql-router:shared-db"]
+  - ["glance:shared-db", "glance-mysql-router:shared-db"]
+  - ["nova-cloud-controller:shared-db", "nova-mysql-router:shared-db"]
+  - ["neutron-api:shared-db", "neutron-mysql-router:shared-db"]
+  - ["placement:shared-db", "placement-mysql-router:shared-db"]
+  - ["vault:shared-db", "vault-mysql-router:shared-db"]
+  - ["keystone-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+  - ["nova-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+  - ["glance-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+  - ["neutron-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+  - ["placement-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
+  - ["vault-mysql-router:db-router", "mysql-innodb-cluster:db-router"]
