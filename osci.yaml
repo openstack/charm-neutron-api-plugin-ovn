@@ -1,8 +1,32 @@
+- job:
+    name: focal-ussuri-ovn-22.03
+    description: Run a functional test against focal-ussuri with OVN 22.03
+    parent: func-target-pre-jobs
+    dependencies:
+      - tox-py38
+      - osci-lint
+      - charm-build
+    vars:
+      tox_extra_args: focal-ussuri-ovn-22.03
+- job:
+    name: focal-victoria-ovn-22.03
+    description: Run a functional test against focal-victoria with OVN 22.03
+    parent: func-target-pre-jobs
+    dependencies:
+      - tox-py38
+      - osci-lint
+      - charm-build
+    vars:
+      tox_extra_args: focal-victoria-ovn-22.03
 - project:
     templates:
       - charm-unit-jobs-py38
-      - charm-focal-ussuri-functional-jobs
-      - charm-victoria-functional-jobs
+    check:
+      jobs:
+      - focal-victoria-ovn-22.03
+      - focal-victoria
+      - focal-ussuri-ovn-22.03
+      - focal-ussuri
     vars:
       needs_charm_build: true
       charm_build_name: neutron-api-plugin-ovn

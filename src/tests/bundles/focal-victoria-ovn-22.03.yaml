@@ -1,7 +1,7 @@
 local_overlay_enabled: True
 
 variables:
-  openstack-origin: &openstack-origin distro
+  openstack-origin: &openstack-origin cloud:focal-victoria
 
 series: &series focal
 
@@ -46,7 +46,7 @@ applications:
     num_units: 3
     options:
       source: *openstack-origin
-    channel: 20.03/edge
+    channel: 22.03/edge
   neutron-api-plugin-ovn:
     charm: ../../../neutron-api-plugin-ovn.charm
   hacluster-neutron-api:
@@ -85,7 +85,7 @@ applications:
     channel: victoria/edge
   ovn-chassis:
     charm: ch:ovn-chassis
-    channel: 20.03/edge
+    channel: 22.03/edge
   nova-compute:
     constraints: "root-disk=20G mem=4G"
     charm: ch:nova-compute

@@ -1,4 +1,4 @@
-local_overlay_enabled: False
+local_overlay_enabled: True
 
 variables:
   openstack-origin: &openstack-origin cloud:focal-victoria
