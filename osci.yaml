@@ -1,8 +1,32 @@
+- job:
+    name: focal-victoria-ovn-22.03
+    description: Run a functional test against focal-victoria with OVN 22.03
+    parent: func-target-pre-jobs
+    dependencies:
+      - tox-py38
+      - osci-lint
+      - charm-build
+    vars:
+      tox_extra_args: focal-victoria-ovn-22.03
+- job:
+    name: focal-wallaby-ovn-22.03
+    description: Run a functional test against focal-wallaby with OVN 22.03
+    parent: func-target-pre-jobs
+    dependencies:
+      - tox-py38
+      - osci-lint
+      - charm-build
+    vars:
+      tox_extra_args: focal-wallaby-ovn-22.03
 - project:
     templates:
       - charm-unit-jobs-py38
-      - charm-victoria-functional-jobs
-      - charm-wallaby-functional-jobs
+    check:
+      jobs:
+        - focal-wallaby-ovn-22.03
+        - focal-wallaby
+        - focal-victoria-ovn-22.03
+        - focal-victoria
     vars:
       needs_charm_build: true
       charm_build_name: neutron-api-plugin-ovn
