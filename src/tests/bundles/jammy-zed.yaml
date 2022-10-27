@@ -28,14 +28,10 @@ applications:
     constraints: mem=3072M
     charm: ch:mysql-innodb-cluster
     num_units: 3
-    options:
-      source: *openstack-origin
     channel: latest/edge
   rabbitmq-server:
     charm: ch:rabbitmq-server
     num_units: 1
-    options:
-      source: *openstack-origin
     channel: latest/edge
   vault:
     charm: ch:vault
