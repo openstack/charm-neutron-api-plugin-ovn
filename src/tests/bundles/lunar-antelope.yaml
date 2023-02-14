@@ -3,7 +3,7 @@ variables:
 
 local_overlay_enabled: False
 
-series: &series jammy
+series: &series lunar
 
 applications:
   keystone-mysql-router:
