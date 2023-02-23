@@ -158,6 +158,7 @@ class TestOvnHandlers(test_utils.PatchHelper):
                                 ('dhcp_default_lease_time', 42),
                                 ('ovn_dhcp4_global_options', 'a:A4,b:B4'),
                                 ('ovn_dhcp6_global_options', 'a:A6,b:B6'),
+                                ('ovn_emit_need_to_frag', True),
                                 ('vhost_sock_dir', '/run/libvirt-vhost-user')
                             ],
                             'ml2_type_geneve': [
