@@ -2,7 +2,7 @@ zipp<2.0.0
 oslo_config
 oslo_i18n
 poetry-core
-flit_core==3.7.1
+flit_core
 importlib_metadata<3.1.1
 
 git+https://github.com/openstack/charms.openstack.git#egg=charms.openstack
