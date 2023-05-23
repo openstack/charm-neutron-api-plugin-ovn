@@ -44,7 +44,7 @@ applications:
       source: *openstack-origin
     channel: latest/edge
   neutron-api-plugin-ovn:
-    charm: ../../../neutron-api-plugin-ovn.charm
+    charm: ../../../neutron-api-plugin-ovn_ubuntu-23.04-amd64.charm
   hacluster-neutron-api:
     charm: ch:hacluster
     channel: latest/edge
