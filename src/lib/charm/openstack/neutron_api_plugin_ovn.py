@@ -84,8 +84,6 @@ class BaseNeutronAPIPluginCharm(charms_openstack.charm.OpenStackCharm):
         'port_forwarding',
         # OVN has its own service driver for that replaces Neutron ``router``
         'router',
-        # Neutron Dynamic Routing is not supported at this time
-        'neutron_dynamic_routing.services.bgp.bgp_plugin.BgpPlugin',
         # VPNaaS is not supported
         'vpnaas',
     ]

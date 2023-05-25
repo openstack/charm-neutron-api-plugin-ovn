@@ -117,7 +117,6 @@ class TestNeutronAPIPluginOvnCharm(Helper):
         c = neutron_api_plugin_ovn.UssuriNeutronAPIPluginCharm()
         svc_plugins = (
             'router,firewall,firewall_v2,metering,segments,log,'
-            'neutron_dynamic_routing.services.bgp.bgp_plugin.BgpPlugin,'
             'lbaasv2,port_forwarding,vpnaas')
         expect = [
             'metering',

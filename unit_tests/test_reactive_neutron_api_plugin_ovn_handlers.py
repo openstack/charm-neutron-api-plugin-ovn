@@ -106,7 +106,6 @@ class TestOvnHandlers(test_utils.PatchHelper):
                 'openvswitch,hyperv,l2population,sriovnicswitch'),
             'service_plugins': (
                 'router,firewall_v2,metering,segments,'
-                'neutron_dynamic_routing.services.bgp.bgp_plugin.BgpPlugin,'
                 'lbaasv2'),
             'tenant_network_types': 'gre,vlan,flat,local',
         }.get(x)
