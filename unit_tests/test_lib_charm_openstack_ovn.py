@@ -17,9 +17,11 @@ import io
 import os
 import unittest.mock as mock
 
+
 import charms_openstack.test_utils as test_utils
 
 import charm.openstack.neutron_api_plugin_ovn as neutron_api_plugin_ovn
+# import charms.reactive as reactive
 
 
 class TestNeutronAPIPluginOvnConfigProperties(test_utils.PatchHelper):
@@ -140,3 +142,15 @@ class TestNeutronAPIPluginOvnCharm(Helper):
         network_types = 'gre,vlan,flat,local'
         expect = ['geneve', 'gre', 'vlan', 'flat', 'local']
         self.assertEquals(c.tenant_network_types(network_types), expect)
+
+    @mock.patch.object(
+        neutron_api_plugin_ovn.charms_openstack.charm.OpenStackCharm,
+        'upgrade_charm')
+    @mock.patch.object(neutron_api_plugin_ovn.reactive, 'set_flag')
+    def test_upgrade_charm(self, set_flag, upgrade_charm):
+        c = neutron_api_plugin_ovn.UssuriNeutronAPIPluginCharm()
+        c.upgrade_charm()
+        set_flag.assert_called_once()
+        set_flag.assert_called_with('restart-needed')
+        upgrade_charm.assert_called_once()
+        upgrade_charm.assert_called_with()

@@ -46,6 +46,7 @@ class TestRegisteredHooks(test_utils.TestRegisteredHooks):
                     'ovsdb-cms.available',),
                 'assess_status': ('neutron-plugin.available',),
                 'poke_ovsdb': ('ovsdb-cms.available',),
+                'restart_neutron': ('restart-needed',),
             },
         }
         # test that the hooks were registered via the
@@ -168,3 +169,14 @@ class TestOvnHandlers(test_utils.PatchHelper):
                 },
             },
         )
+
+    @mock.patch.object(handlers.reactive, 'endpoint_from_flag')
+    @mock.patch.object(handlers.reactive, 'clear_flag')
+    def test_restart_neutron(self, clear_flag, endpoint_from_flag):
+        neutron_plugin = mock.MagicMock()
+        endpoint_from_flag.return_value = neutron_plugin
+        handlers.restart_neutron()
+        neutron_plugin.request_restart.assert_called_once()
+        neutron_plugin.request_restart.assert_called_once_with()
+        clear_flag.assert_called_once()
+        clear_flag.assert_called_once_with('restart-needed')

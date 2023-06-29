@@ -16,6 +16,7 @@ import os
 
 import charms_openstack.adapters
 import charms_openstack.charm
+import charms.reactive as reactive
 
 
 CERT_RELATION = 'certificates'
@@ -227,6 +228,16 @@ class BaseNeutronAPIPluginCharm(charms_openstack.charm.OpenStackCharm):
             network_type
             for network_type in neutron_tenant_network_types.split(',')
         ]
+
+    def upgrade_charm(self):
+        """ It rises 'restart-needed' flag as a part of "upgrade-charm" hook.
+
+        Flag is risen to trigger corresponding handler invocation.
+        :param None
+        :returns: None
+        """
+        super().upgrade_charm()
+        reactive.set_flag('restart-needed')
 
 
 class TrainNeutronAPIPluginCharm(BaseNeutronAPIPluginCharm):

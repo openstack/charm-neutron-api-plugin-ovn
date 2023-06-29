@@ -126,3 +126,11 @@ def configure_neutron():
             },
         )
         instance.assess_status()
+
+
+@reactive.when('restart-needed')
+def restart_neutron():
+    ch_core.hookenv.log('DEBUG: Executing neutron restart')
+    neutron = reactive.endpoint_from_flag('neutron-plugin.connected')
+    neutron.request_restart()
+    reactive.clear_flag('restart-needed')
