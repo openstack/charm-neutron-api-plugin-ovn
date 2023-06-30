@@ -154,3 +154,124 @@ class TestNeutronAPIPluginOvnCharm(Helper):
         set_flag.assert_called_with('restart-needed')
         upgrade_charm.assert_called_once()
         upgrade_charm.assert_called_with()
+
+    @mock.patch.object(neutron_api_plugin_ovn.ch_core.host, "lsb_release")
+    def test_series_caching(self, mock_lsb_release):
+        """Test caching property that returns host's series."""
+        series = 'focal'
+        mock_lsb_release.return_value = {'DISTRIB_CODENAME': series}
+        c = neutron_api_plugin_ovn.UssuriNeutronAPIPluginCharm()
+
+        # Assert that getter returns correct value
+        self.assertEquals(c.series, series)
+        mock_lsb_release.assert_called_once_with()
+
+        # Assert that getter does not call underlying functions multiple times
+        _ = c.series
+        mock_lsb_release.assert_called_once_with()
+
+    def test_ovn_source_focal_default(self):
+        """Test that 'ovn_source' property returns default UCA pocket.
+
+        If value of 'ovn-source' is empty string we should return default
+        pocket for the series.
+        """
+        series = 'focal'
+
+        c = neutron_api_plugin_ovn.UssuriNeutronAPIPluginCharm()
+        c.options.ovn_source = ''
+        c._series = series
+
+        default_pocket = c.ovn_default_pockets[series]
+
+        self.assertEquals(c.ovn_source, default_pocket)
+
+    def test_ovn_source_distro(self):
+        """Test that 'ovn_source' property returns no UCA pocket.
+
+        If value of 'ovn-source' is 'distro' charm should not perform any
+        upgrades and therefore this property should not return any UCA pocket.
+        """
+        c = neutron_api_plugin_ovn.UssuriNeutronAPIPluginCharm()
+        c.options.ovn_source = 'distro'
+
+        self.assertEquals(c.ovn_source, '')
+
+    def test_ovn_source_manual(self):
+        """Test that 'ovn_source' property returns manually configured ppa.
+
+        If value of 'ovn-source' isn't any of the special values, this property
+        should return the config value directly, assuming that it's explicitly
+        configured PPA URL.
+        """
+        ppa = 'cloud:focal-ovn-22.03'
+
+        c = neutron_api_plugin_ovn.UssuriNeutronAPIPluginCharm()
+        c.options.ovn_source = ppa
+
+        self.assertIs(c.ovn_source, ppa)
+
+    def test_is_fresh_deployment(self):
+        """Test property that returns True if 'install_stamp' flag is set."""
+        self.patch_object(neutron_api_plugin_ovn.reactive, 'is_flag_set')
+        c = neutron_api_plugin_ovn.UssuriNeutronAPIPluginCharm()
+
+        self.is_flag_set.return_value = False
+        self.assertFalse(c.fresh_deployment)
+
+        self.is_flag_set.return_value = True
+        self.assertTrue(c.fresh_deployment)
+
+    def test_charm_install_ovn_upgrade(self):
+        """Test that on fresh install, UCA pocket is used to upgrade OVN.
+
+        Fresh installations of this charm should used default UCA
+        pocket to install OVN packages.
+        """
+        charm_class = neutron_api_plugin_ovn.UssuriNeutronAPIPluginCharm
+        fresh_deployment_mock = mock.PropertyMock(return_value=True)
+        self.patch_object(charm_class, 'upgrade_ovn')
+        self.patch_object(
+            charm_class,
+            'fresh_deployment',
+            new_callable=fresh_deployment_mock
+        )
+
+        c = neutron_api_plugin_ovn.UssuriNeutronAPIPluginCharm()
+        c.install()
+
+        self.upgrade_ovn.assert_called_once_with()
+
+    def test_charm_install_ovn_dont_upgrade(self):
+        """Test that handler triggered by upgrade, won't install new OVN.
+
+        Installation handlers that are triggered during charm upgrade should
+        not automatically upgrade OVN packages from new UCA pocket
+        """
+        charm_class = neutron_api_plugin_ovn.UssuriNeutronAPIPluginCharm
+        fresh_deployment_mock = mock.PropertyMock(return_value=False)
+        self.patch_object(charm_class, 'upgrade_ovn')
+        self.patch_object(
+            charm_class,
+            'fresh_deployment',
+            new_callable=fresh_deployment_mock
+        )
+
+        c = neutron_api_plugin_ovn.UssuriNeutronAPIPluginCharm()
+        c.install()
+
+        self.upgrade_ovn.assert_not_called()
+
+    def test_upgrade_ovn_from_uca(self):
+        """Upgrade OVN packages if there's an OVN UCA pocket configured."""
+        charm_class = neutron_api_plugin_ovn.UssuriNeutronAPIPluginCharm
+        ovn_source_data = 'focal-ovn-22.03'
+        ovn_source_mock = mock.PropertyMock(return_value=ovn_source_data)
+        self.patch_object(
+            charm_class,
+            'ovn_source',
+            new_callable=ovn_source_mock
+        )
+
+        c = neutron_api_plugin_ovn.UssuriNeutronAPIPluginCharm()
+        c.upgrade_ovn()
