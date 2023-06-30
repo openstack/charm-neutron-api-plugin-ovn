@@ -14,9 +14,13 @@
 
 import os
 
+import charmhelpers.core as ch_core
+import charmhelpers.fetch as ch_fetch
 import charms_openstack.adapters
 import charms_openstack.charm
+import charms.reactive as reactive
 
+import charmhelpers.core.hookenv as hookenv
 
 CERT_RELATION = 'certificates'
 NEUTRON_PLUGIN_ML2_DIR = '/etc/neutron/plugins/ml2'
@@ -252,7 +256,89 @@ class UssuriNeutronAPIPluginCharm(BaseNeutronAPIPluginCharm):
     packages = []
     db_migration_needed = False
     svc_plugins = ['ovn-router']
+    ovn_default_pockets = {
+        'focal': 'cloud:focal-ovn-22.03',
+    }
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self._series = None
+
+    @property
+    def series(self):
+        """Caching property of host's distribution release codename."""
+        if self._series is None:
+            self._series = ch_core.host.lsb_release()['DISTRIB_CODENAME']
+
+        return self._series
+
+    @property
+    def ovn_source(self):
+        """Return OVN UCA pocket that should be installed based on the config.
+
+        Based on the configuration value in charm's 'ovn-source':
+
+            * "distro" - Don't configure any UCA pocket, use distro's default
+            * "" (empty string) - Configure default UCA pocket for the series.
+            * Any other value - return config value as-is, assuming that user
+                                configured UCA pocket explicitly.
+
+        :return: UCA pocket string or empty string if no eligible pocket was
+                 defined/configured.
+        """
+        config_value = self.options.ovn_source
+        if config_value == 'distro':
+            return ''
+        elif config_value == '':
+            return self.ovn_default_pockets.get(self.series, '')
+
+        return config_value
+
+    @property
+    def fresh_deployment(self):
+        """Return True if charm-upgrade handler is in progress."""
+        return reactive.is_flag_set('leadership.set.install_stamp')
+
+    def _upgrade_packages(self):
+        """Trigger upgrade of openstack packages.
+
+        This function mimics behavior of
+        'BaseOpenstackCharmActions.do_openstack_pkg_upgrade(False)' that was
+        added in Yoga release.
+        """
+        ch_fetch.apt_update()
+
+        dpkg_opts = [
+            '--option', 'Dpkg::Options::=--force-confnew',
+            '--option', 'Dpkg::Options::=--force-confdef',
+        ]
+        ch_fetch.apt_upgrade(
+            options=dpkg_opts,
+            fatal=True,
+            dist=True)
+        ch_fetch.apt_install(
+            packages=self.all_packages,
+            options=dpkg_opts,
+            fatal=True)
+        self.remove_obsolete_packages()
 
     def install(self):
-        """We no longer need to install anything."""
-        pass
+        """Install or upgrade OVN packages from dedicated pocket.
+
+        On new installs (e.g. not charm-upgrades), trigger ovn package upgrade.
+        """
+        if self.fresh_deployment:
+            self.upgrade_ovn()
+
+    def upgrade_ovn(self):
+        """Upgrade ovn packages based configured UCA pocket."""
+        if self.ovn_source:
+            hookenv.log('Adding "{}" pocket and upgrading '
+                        'packages.'.format(self.ovn_source))
+            ch_fetch.add_source(self.ovn_source)
+            self._upgrade_packages()
+            neutron_api = reactive.endpoint_from_flag(
+                'neutron-plugin.connected'
+            )
+            if neutron_api is not None:
+                neutron_api.request_restart()

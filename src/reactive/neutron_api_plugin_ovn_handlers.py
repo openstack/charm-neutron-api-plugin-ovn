@@ -14,6 +14,7 @@
 
 import charmhelpers.core as ch_core
 
+import charms.leadership as leadership
 import charms.reactive as reactive
 
 import charms_openstack.bus
@@ -24,13 +25,43 @@ charms_openstack.bus.discover()
 
 # Use the charms.openstack defaults for common states and hooks
 charm.use_defaults(
-    'charm.installed',
     'config.changed',
     'charm.default-select-release',
     'update-status',
     'upgrade-charm',
     'certificates.available',
 )
+
+
+@reactive.when_none('charm.installed', 'leadership.set.install_stamp')
+@reactive.when('leadership.is_leader')
+def stamp_fresh_deployment():
+    """Stamp the deployment with leader setting, fresh deployment.
+    This is used to determine whether this application is a fresh or upgraded
+    deployment which influence the default of the `ovn-source` configuration
+    option.
+    """
+    leadership.leader_set(install_stamp=2203)
+
+
+@reactive.when_none('is-update-status-hook',
+                    'leadership.set.install_stamp',
+                    'leadership.set.upgrade_stamp')
+@reactive.when('charm.installed', 'leadership.is_leader')
+def stamp_upgraded_deployment():
+    """Stamp the deployment with leader setting, upgrade.
+    This is needed so that the units of this application can safely enable
+    the default install hook.
+    """
+    leadership.leader_set(upgrade_stamp=2203)
+
+
+@reactive.when_none('charm.installed', 'is-update-status-hook')
+@reactive.when_any('leadership.set.install_stamp',
+                   'leadership.set.upgrade_stamp')
+def enable_install():
+    """Enable the default install hook."""
+    charm.use_defaults('charm.installed')
 
 
 @reactive.when_none('neutron-plugin.db_migration',
@@ -126,3 +157,10 @@ def configure_neutron():
             },
         )
         instance.assess_status()
+
+
+@reactive.when('config.changed.ovn-source')
+@reactive.when_not('config.default.ovn-source')
+def ovn_source_changed():
+    with charm.provide_charm_instance() as instance:
+        instance.upgrade_ovn()
