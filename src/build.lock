@@ -209,7 +209,7 @@
       "package": "charmhelpers",
       "url": "git+https://github.com/juju/charm-helpers.git",
       "branch": "stable/victoria",
-      "version": "df2e33ed634200de1d02d7e5f1baaf80f22a6315",
+      "version": "94b41c44c6eaa6f4d0089474e905dc6a5b0bba97",
       "vcs": "git"
     },
     {

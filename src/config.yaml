@@ -18,6 +18,35 @@ options:
 
       Note: The ``ovn-chassis:nova-compute - nova-compute:neutron-plugin``
       subordinate relation is a prerequisite for this to work.
+  ovn-source:
+    type: string
+    default: ""
+    description: >
+      Overlay repository from which to install OVN packages.
+
+      The default for this configuration option is determined at charm
+      runtime.
+
+      New deployments on Ubuntu 20.04 (Focal) series with this option set
+      to default "" (empty string), will use repository overlay with
+      OVN 22.03 packages.
+
+      To deploy new Ubuntu 20.04 (Focal) deployment without applying the
+      package overlay, set this configuration value to "distro" at deployment
+      time.
+
+      Deployments that are upgraded from older releases to 20.04 (Focal) won't
+      automatically switch to using overlay and will keep using packages
+      provided by release distribution.
+
+      To enable package overlay on a deployment that is not yet using it,
+      set this option to one of the valid values:
+
+        * "cloud:focal-ovn-22.03"
+
+      Deployments on releases newer than 20.04 (Focal) do not currently need
+      this package overlay.
+
   enable-distributed-floating-ip:
     type: boolean
     default: False

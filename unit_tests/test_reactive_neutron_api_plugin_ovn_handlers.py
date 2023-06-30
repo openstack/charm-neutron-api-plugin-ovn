@@ -37,6 +37,19 @@ class TestRegisteredHooks(test_utils.TestRegisteredHooks):
                 'maybe_request_db_migration': (
                     'neutron-plugin.available',
                     'run-default-update-status',),
+                'stamp_fresh_deployment': (
+                    'charm.installed',
+                    'leadership.set.install_stamp',
+                ),
+                'stamp_upgraded_deployment': (
+                    'is-update-status-hook',
+                    'leadership.set.install_stamp',
+                    'leadership.set.upgrade_stamp'
+                ),
+                'enable_install': (
+                    'charm.installed',
+                    'is-update-status-hook',
+                ),
             },
             'when': {
                 'maybe_flag_db_migration': ('charm.installed',),
@@ -46,7 +59,21 @@ class TestRegisteredHooks(test_utils.TestRegisteredHooks):
                     'ovsdb-cms.available',),
                 'assess_status': ('neutron-plugin.available',),
                 'poke_ovsdb': ('ovsdb-cms.available',),
+                'ovn_source_changed': ('config.changed.ovn-source',),
+                'stamp_fresh_deployment': ('leadership.is_leader',),
+                'stamp_upgraded_deployment': (
+                    'charm.installed',
+                    'leadership.is_leader'
+                ),
             },
+            'when_any': {
+                'enable_install': (
+                    'leadership.set.install_stamp',
+                    'leadership.set.upgrade_stamp'),
+            },
+            'when_not': {
+                'ovn_source_changed': ('config.default.ovn-source',)
+            }
         }
         # test that the hooks were registered via the
         # reactive.ovn_handlers
@@ -169,3 +196,10 @@ class TestOvnHandlers(test_utils.PatchHelper):
                 },
             },
         )
+
+    def test_ovn_source_config_changed(self):
+        """Test that changing 'ovn-source' config triggers package upgrade."""
+        config = {'ovn-source': 'cloud:focal-ovn-22.03'}
+        handlers.ch_core.hookenv.config.return_value = config
+        handlers.ovn_source_changed()
+        self.charm.upgrade_ovn.assert_called_once_with()
