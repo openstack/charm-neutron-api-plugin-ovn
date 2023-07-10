@@ -129,6 +129,11 @@ def configure_neutron():
                 ('ovn_dhcp6_global_options',
                     ','.join(
                         _split_if_str(options.ovn_dhcp6_global_options))),
+                # Only safe on Ubuntu releases which have a kernel
+                # version of 5.2 or greater.  Enabled by default
+                # because charm supports focal or newer which has a
+                # minimum kernel version of 5.4.
+                ('ovn_emit_need_to_frag', True),
                 # NOTE(fnordahl): will be used on chassis with DPDK enabled
                 #
                 # Neutron will make per chassis decisions based on chassis
