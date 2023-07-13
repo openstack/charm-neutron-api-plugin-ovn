@@ -272,6 +272,15 @@ class TestNeutronAPIPluginOvnCharm(Helper):
             'ovn_source',
             new_callable=ovn_source_mock
         )
-
+        self.patch_object(charm_class, '_upgrade_packages')
+        self.patch_object(neutron_api_plugin_ovn.ch_fetch, 'add_source')
+        neutron_principal_mock = mock.MagicMock()
+        self.patch_object(neutron_api_plugin_ovn.reactive,
+                          'endpoint_from_flag',
+                          return_value=neutron_principal_mock)
         c = neutron_api_plugin_ovn.UssuriNeutronAPIPluginCharm()
         c.upgrade_ovn()
+
+        self.add_source.assert_called_once_with(ovn_source_data)
+        self._upgrade_packages.assert_called_once_with()
+        neutron_principal_mock.request_restart.assert_called_once_with()

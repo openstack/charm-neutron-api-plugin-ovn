@@ -345,3 +345,8 @@ class UssuriNeutronAPIPluginCharm(BaseNeutronAPIPluginCharm):
                         'packages.'.format(self.ovn_source))
             ch_fetch.add_source(self.ovn_source)
             self._upgrade_packages()
+            neutron_api = reactive.endpoint_from_flag(
+                'neutron-plugin.connected'
+            )
+            if neutron_api is not None:
+                neutron_api.request_restart()
