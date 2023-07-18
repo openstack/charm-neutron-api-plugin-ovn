@@ -1,9 +1,9 @@
 variables:
-  openstack-origin: &openstack-origin cloud:jammy-zed
+  openstack-origin: &openstack-origin distro
 
 local_overlay_enabled: False
 
-series: &series jammy
+series: &series mantic
 
 applications:
   keystone-mysql-router:
@@ -44,7 +44,7 @@ applications:
       source: *openstack-origin
     channel: latest/edge
   neutron-api-plugin-ovn:
-    charm: ../../../neutron-api-plugin-ovn_ubuntu-22.04-amd64_ubuntu-22.10-amd64.charm
+    charm: ../../../neutron-api-plugin-ovn_ubuntu-23.10-amd64.charm
   hacluster-neutron-api:
     charm: ch:hacluster
     channel: latest/edge

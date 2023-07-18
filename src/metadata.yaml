@@ -9,8 +9,8 @@ tags:
 - networking
 series:
 - jammy
-- kinetic
 - lunar
+- mantic
 subordinate: true
 requires:
   container:
