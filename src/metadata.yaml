@@ -9,7 +9,6 @@ tags:
 - networking
 series:
 - jammy
-- lunar
 - mantic
 subordinate: true
 requires:
