@@ -350,3 +350,15 @@ class UssuriNeutronAPIPluginCharm(BaseNeutronAPIPluginCharm):
             )
             if neutron_api is not None:
                 neutron_api.request_restart()
+
+
+class BobcatNeutronAPIPluginCharm(UssuriNeutronAPIPluginCharm):
+    """The Bobcat incarnation of the charm.
+
+    Allow for baremetal mechanism drivers so that ironic can
+    leverage OVN.
+    """
+    release = 'bobcat'
+    svc_plugins = ['ovn-router', 'trunk']
+    # Allow for the baremetal mechanism driver
+    mech_driver_allowlist = ['sriovnicswitch', 'baremetal']
