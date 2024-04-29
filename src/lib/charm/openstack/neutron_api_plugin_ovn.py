@@ -78,7 +78,7 @@ class BaseNeutronAPIPluginCharm(charms_openstack.charm.OpenStackCharm):
     # Neutron service plugins to add
     svc_plugins = []
     # Neutron service plugins to remove
-    svc_plugin_blacklist = [
+    svc_plugin_denylist = [
         # FWaaS is not supported and also deprecated
         'firewall',
         'firewall_v2',
@@ -94,7 +94,7 @@ class BaseNeutronAPIPluginCharm(charms_openstack.charm.OpenStackCharm):
     # Neutron mechanism driers to prepend
     mech_drivers = ['ovn']
     # Neutron mechanism drivers to allow
-    mech_driver_whitelist = ['sriovnicswitch']
+    mech_driver_allowlist = ['sriovnicswitch']
     # Neutron tenant network types to prepend
     network_types = ['geneve']
 
@@ -176,7 +176,7 @@ class BaseNeutronAPIPluginCharm(charms_openstack.charm.OpenStackCharm):
         The ``svc_plugins`` class variable must be set in the release
         specifc charm classes.
 
-        The ``svc_plugin_blacklist`` class variable defines which
+        The ``svc_plugin_denylist`` class variable defines which
         service plugins to not use together with OVN.
 
         :param neutron_svc_plugins: Comma separated list of service plugins
@@ -189,7 +189,7 @@ class BaseNeutronAPIPluginCharm(charms_openstack.charm.OpenStackCharm):
         return [
             service_plugin
             for service_plugin in neutron_svc_plugins.split(',')
-            if service_plugin not in self.svc_plugin_blacklist
+            if service_plugin not in self.svc_plugin_denylist
         ] + self.svc_plugins
 
     def mechanism_drivers(self, neutron_mech_drivers=None):
@@ -198,7 +198,7 @@ class BaseNeutronAPIPluginCharm(charms_openstack.charm.OpenStackCharm):
         The ``mech_drivers`` class variable defines which drivers to add
         and must be set in the release specific charm classes.
 
-        The ``mech_driver_whitelist`` class variable defines which
+        The ``mech_driver_allowlist`` class variable defines which
         mechanism drivers are allowed to use together with OVN.
 
         :param neutron_mech_drivers: Comma separated list of mechanism drivers
@@ -211,7 +211,7 @@ class BaseNeutronAPIPluginCharm(charms_openstack.charm.OpenStackCharm):
         return self.mech_drivers + [
             mech_driver
             for mech_driver in neutron_mech_drivers.split(',')
-            if mech_driver in self.mech_driver_whitelist
+            if mech_driver in self.mech_driver_allowlist
         ]
 
     def tenant_network_types(self, neutron_tenant_network_types=None):
