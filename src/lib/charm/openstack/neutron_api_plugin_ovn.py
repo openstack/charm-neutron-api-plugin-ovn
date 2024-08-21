@@ -74,7 +74,7 @@ class BaseNeutronAPIPluginCharm(charms_openstack.charm.OpenStackCharm):
     release_pkg = version_package = 'neutron-common'
     # make sure we can write secrets readable by the ``neutron-server`` process
     group = 'neutron'
-    db_migration_needed = False
+    _db_migration_needed = False
     # Neutron service plugins to add
     svc_plugins = []
     # Neutron service plugins to remove
@@ -168,7 +168,7 @@ class BaseNeutronAPIPluginCharm(charms_openstack.charm.OpenStackCharm):
         :returns: Whether DB migration is needed.
         :rtype: bool
         """
-        return self.db_migration_needed
+        return self._db_migration_needed
 
     def service_plugins(self, neutron_svc_plugins=None):
         """Provide list of service plugins for current OpenStack release.

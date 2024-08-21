@@ -219,7 +219,7 @@ class TestActions(test_utils.PatchHelper):
             return parser
 
         self.ConfigParser.side_effect = _fakeparser
-        self.assertEquals(
+        self.assertEqual(
             actions.get_neutron_db_connection_string(), 'fake-connection')
 
     def test_offline_neutron_morph_db(self):

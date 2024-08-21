@@ -28,14 +28,14 @@ class TestNeutronAPIPluginOvnConfigProperties(test_utils.PatchHelper):
 
     def test_ovn_key(self):
         cls = mock.MagicMock()
-        self.assertEquals(
+        self.assertEqual(
             neutron_api_plugin_ovn.ovn_key(cls),
             os.path.join(neutron_api_plugin_ovn.NEUTRON_PLUGIN_ML2_DIR,
                          'key_host'))
 
     def test_ovn_cert(self):
         cls = mock.MagicMock()
-        self.assertEquals(
+        self.assertEqual(
             neutron_api_plugin_ovn.ovn_cert(cls),
             os.path.join(neutron_api_plugin_ovn.NEUTRON_PLUGIN_ML2_DIR,
                          'cert_host'))
@@ -43,7 +43,7 @@ class TestNeutronAPIPluginOvnConfigProperties(test_utils.PatchHelper):
     def test_ovn_ca_cert(self):
         cls = mock.MagicMock()
         cls.charm_instance.name = 'neutron-api-plugin-ovn'
-        self.assertEquals(
+        self.assertEqual(
             neutron_api_plugin_ovn.ovn_ca_cert(cls),
             os.path.join(neutron_api_plugin_ovn.NEUTRON_PLUGIN_ML2_DIR,
                          'neutron-api-plugin-ovn.crt'))
@@ -126,7 +126,7 @@ class TestNeutronAPIPluginOvnCharm(Helper):
             'lbaasv2',
             'ovn-router',
         ]
-        self.assertEquals(c.service_plugins(svc_plugins), expect)
+        self.assertEqual(c.service_plugins(svc_plugins), expect)
 
     def test_mechanism_drivers(self):
         c = neutron_api_plugin_ovn.UssuriNeutronAPIPluginCharm()
@@ -135,13 +135,13 @@ class TestNeutronAPIPluginOvnCharm(Helper):
             'ovn',
             'sriovnicswitch',
         ]
-        self.assertEquals(c.mechanism_drivers(mech_drivers), expect)
+        self.assertEqual(c.mechanism_drivers(mech_drivers), expect)
 
     def test_tenant_network_types(self):
         c = neutron_api_plugin_ovn.UssuriNeutronAPIPluginCharm()
         network_types = 'gre,vlan,flat,local'
         expect = ['geneve', 'gre', 'vlan', 'flat', 'local']
-        self.assertEquals(c.tenant_network_types(network_types), expect)
+        self.assertEqual(c.tenant_network_types(network_types), expect)
 
     @mock.patch.object(
         neutron_api_plugin_ovn.charms_openstack.charm.OpenStackCharm,
@@ -163,7 +163,7 @@ class TestNeutronAPIPluginOvnCharm(Helper):
         c = neutron_api_plugin_ovn.UssuriNeutronAPIPluginCharm()
 
         # Assert that getter returns correct value
-        self.assertEquals(c.series, series)
+        self.assertEqual(c.series, series)
         mock_lsb_release.assert_called_once_with()
 
         # Assert that getter does not call underlying functions multiple times
@@ -184,7 +184,7 @@ class TestNeutronAPIPluginOvnCharm(Helper):
 
         default_pocket = c.ovn_default_pockets[series]
 
-        self.assertEquals(c.ovn_source, default_pocket)
+        self.assertEqual(c.ovn_source, default_pocket)
 
     def test_ovn_source_distro(self):
         """Test that 'ovn_source' property returns no UCA pocket.
@@ -195,7 +195,7 @@ class TestNeutronAPIPluginOvnCharm(Helper):
         c = neutron_api_plugin_ovn.UssuriNeutronAPIPluginCharm()
         c.options.ovn_source = 'distro'
 
-        self.assertEquals(c.ovn_source, '')
+        self.assertEqual(c.ovn_source, '')
 
     def test_ovn_source_manual(self):
         """Test that 'ovn_source' property returns manually configured ppa.
