@@ -150,6 +150,7 @@ class TestOvnHandlers(test_utils.PatchHelper):
         options.dhcp_default_lease_time = self.pmock(42)
         options.ovn_dhcp4_global_options = self.pmock('a:A4 b:B4')
         options.ovn_dhcp6_global_options = self.pmock('a:A6 b:B6')
+        options.ovn_router_indirect_snat = self.pmock('snat')
         self.patch_charm('mechanism_drivers')
         self.mechanism_drivers.return_value = ['ovn', 'sriovnicswitch']
         self.patch_charm('service_plugins')
@@ -187,6 +188,7 @@ class TestOvnHandlers(test_utils.PatchHelper):
                                 ('ovn_dhcp4_global_options', 'a:A4,b:B4'),
                                 ('ovn_dhcp6_global_options', 'a:A6,b:B6'),
                                 ('ovn_emit_need_to_frag', True),
+                                ('ovn_router_indirect_snat', 'snat'),
                                 ('vhost_sock_dir', '/run/libvirt-vhost-user')
                             ],
                             'ml2_type_geneve': [
