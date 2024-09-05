@@ -132,3 +132,14 @@ options:
 
       Note that a performance penalty may occur on older kernel versions (<= 5.2)
       or if hardware acceleration does not support the ``check_pkt_len`` action.
+  ovn-router-indirect-snat:
+    type: boolean
+    default: False
+    description: >
+      Configure SNAT for all nested subnets connected to the router through
+      any other routers, similar to the default ML2/OVS behavior.
+
+      Note: Should only be enabled for versions of OVN v24.03.4 or later,
+      or any version with a fix for the bug mentioned below.
+
+      See https://bugs.launchpad.net/ubuntu/+source/neutron/+bug/2051935

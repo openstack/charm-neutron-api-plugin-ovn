@@ -134,6 +134,9 @@ def configure_neutron():
                 # because charm supports focal or newer which has a
                 # minimum kernel version of 5.4.
                 ('ovn_emit_need_to_frag', options.enable_emit_need_to_frag),
+                # Only safe with OVN releases of v24.03.4 or greater,
+                # else it could break SNAT and floating IP.
+                ('ovn_router_indirect_snat', options.ovn_router_indirect_snat),
                 # NOTE(fnordahl): will be used on chassis with DPDK enabled
                 #
                 # Neutron will make per chassis decisions based on chassis
