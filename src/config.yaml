@@ -121,3 +121,15 @@ options:
         - ntp_server:,wpad:1.2.3.5 - Unset ntp_server and set wpad
 
         See the ovn-nb(5) man page for available options.
+  enable-emit-need-to-frag:
+    type: boolean
+    default: True
+    description: >
+      When enabled, the length of packets traversing router gateway ports 
+      will be checked, and if necessary ICMPv4 type 3 (Destination 
+      Unreachable) code 4 (Fragmentation Needed and Don't Fragment was Set)
+      or ICMPv6 type 2 (Packet Too Big) code 0 (no route to destination)
+      packets will be generated.
+
+      Note that a performance penalty may incur on older kernel versions (<= 5.2)
+      or if hardware acceleration does not support the ``check_pkt_len`` action.

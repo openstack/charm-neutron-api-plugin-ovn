@@ -145,6 +145,7 @@ class TestOvnHandlers(test_utils.PatchHelper):
         options.ovn_l3_scheduler = self.pmock('aSched')
         options.ovn_metadata_enabled = self.pmock('aMetaData')
         options.enable_distributed_floating_ip = self.pmock('dont')
+        options.enable_emit_need_to_frag = self.pmock(False)
         options.dns_servers = self.pmock('dns1 dns2')
         options.geneve_vni_ranges = self.pmock('vnia:vniA vnib:vniB')
         options.dhcp_default_lease_time = self.pmock(42)
@@ -186,7 +187,7 @@ class TestOvnHandlers(test_utils.PatchHelper):
                                 ('dhcp_default_lease_time', 42),
                                 ('ovn_dhcp4_global_options', 'a:A4,b:B4'),
                                 ('ovn_dhcp6_global_options', 'a:A6,b:B6'),
-                                ('ovn_emit_need_to_frag', True),
+                                ('ovn_emit_need_to_frag', False),
                                 ('vhost_sock_dir', '/run/libvirt-vhost-user')
                             ],
                             'ml2_type_geneve': [

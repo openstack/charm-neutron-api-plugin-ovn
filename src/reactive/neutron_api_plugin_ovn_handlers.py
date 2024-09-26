@@ -133,7 +133,7 @@ def configure_neutron():
                 # version of 5.2 or greater.  Enabled by default
                 # because charm supports focal or newer which has a
                 # minimum kernel version of 5.4.
-                ('ovn_emit_need_to_frag', True),
+                ('ovn_emit_need_to_frag', options.enable_emit_need_to_frag),
                 # NOTE(fnordahl): will be used on chassis with DPDK enabled
                 #
                 # Neutron will make per chassis decisions based on chassis
