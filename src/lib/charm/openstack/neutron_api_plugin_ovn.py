@@ -80,8 +80,6 @@ class BaseNeutronAPIPluginCharm(charms_openstack.charm.OpenStackCharm):
         'firewall_v2',
         # Security groups logging not supported at this time
         'log',
-        # Port forwarding is not supported at this time
-        'port_forwarding',
         # OVN has its own service driver for that replaces Neutron ``router``
         'router',
         # Neutron Dynamic Routing is not supported at this time
