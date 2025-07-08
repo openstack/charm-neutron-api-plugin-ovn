@@ -123,6 +123,7 @@ class TestNeutronAPIPluginOvnCharm(Helper):
         expect = [
             'metering',
             'segments',
+            'log',
             'lbaasv2',
             'port_forwarding',
             'ovn-router',

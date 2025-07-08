@@ -82,8 +82,6 @@ class BaseNeutronAPIPluginCharm(charms_openstack.charm.OpenStackCharm):
         # FWaaS is not supported and also deprecated
         'firewall',
         'firewall_v2',
-        # Security groups logging not supported at this time
-        'log',
         # OVN has its own service driver for that replaces Neutron ``router``
         'router',
         # VPNaaS is not supported
