@@ -124,6 +124,7 @@ class TestNeutronAPIPluginOvnCharm(Helper):
             'metering',
             'segments',
             'lbaasv2',
+            'port_forwarding',
             'ovn-router',
         ]
         self.assertEqual(c.service_plugins(svc_plugins), expect)
