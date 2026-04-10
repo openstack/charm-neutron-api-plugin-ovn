@@ -6,9 +6,10 @@ description: |
   ``neutron-api`` units and augments Neutron's configuration for use with
   the OVN ML2 plugin.
 tags:
-  - networking
+- networking
 series:
-  - jammy
+- jammy
+- noble
 subordinate: true
 requires:
   container:
