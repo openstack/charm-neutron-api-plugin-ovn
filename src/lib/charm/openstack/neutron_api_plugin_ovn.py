@@ -74,7 +74,7 @@ class BaseNeutronAPIPluginCharm(charms_openstack.charm.OpenStackCharm):
     release_pkg = version_package = 'neutron-common'
     # make sure we can write secrets readable by the ``neutron-server`` process
     group = 'neutron'
-    db_migration_needed = False
+    _db_migration_needed = False
     # Neutron service plugins to add
     svc_plugins = []
     # Neutron service plugins to remove
