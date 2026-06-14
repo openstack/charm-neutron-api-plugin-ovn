@@ -8,7 +8,6 @@ gate_bundles:
 
 dev_bundles:
 - jammy-bobcat
-- mantic-bobcat
 
 target_deploy_status:
   neutron-api-plugin-ovn:
@@ -33,7 +32,3 @@ configure:
 
 tests:
 - zaza.openstack.charm_tests.neutron.tests.NeutronNetworkingTest
-
-tests_options:
-  force_deploy:
-    - mantic-bobcat
