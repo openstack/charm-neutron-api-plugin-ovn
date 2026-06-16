@@ -156,7 +156,7 @@ class BaseNeutronAPIPluginCharm(charms_openstack.charm.OpenStackCharm):
         return states_to_check
 
     @property
-    def db_migration_needed(self):
+    def db_migration_needed(self):  # noqa
         """Determine whether DB migration is needed.
 
         The returned variable must be set in the release specifc charm classes.
