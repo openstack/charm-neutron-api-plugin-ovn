@@ -8,101 +8,101 @@ series: &series focal
 applications:
   keystone-mysql-router:
     charm: ch:mysql-router
-    channel: latest/edge
+    channel: 8.0/edge
   nova-mysql-router:
     charm: ch:mysql-router
-    channel: latest/edge
+    channel: 8.0/edge
   glance-mysql-router:
     charm: ch:mysql-router
-    channel: latest/edge
+    channel: 8.0/edge
   neutron-mysql-router:
     charm: ch:mysql-router
-    channel: latest/edge
+    channel: 8.0/edge
   placement-mysql-router:
     charm: ch:mysql-router
-    channel: latest/edge
+    channel: 8.0/edge
   vault-mysql-router:
     charm: ch:mysql-router
-    channel: latest/edge
+    channel: 8.0/edge
   mysql-innodb-cluster:
     constraints: mem=3072M
     charm: ch:mysql-innodb-cluster
     num_units: 3
-    options:
-      source: *openstack-origin
-    channel: latest/edge
+    channel: 8.0/edge
   rabbitmq-server:
     charm: ch:rabbitmq-server
     num_units: 1
-    options:
-      source: *openstack-origin
-    channel: latest/edge
+    channel: 3.9/edge
   vault:
     charm: ch:vault
     num_units: 1
-    channel: latest/edge
+    channel: 1.7/edge
   ovn-central:
     charm: ch:ovn-central
     num_units: 3
-    options:
-      source: *openstack-origin
-    channel: latest/edge
+    channel: 22.03/edge
   neutron-api-plugin-ovn:
     charm: ../../../neutron-api-plugin-ovn_ubuntu@20.04-amd64.charm
   hacluster-neutron-api:
     charm: ch:hacluster
-    channel: latest/edge
+    channel: 2.4/edge
   neutron-api:
     charm: ch:neutron-api
     series: *series
     num_units: 3
     options:
+      openstack-origin: *openstack-origin
+      debug: True
       # NOTE(fnordahl): At current state of upstream Neutron development this
       # is a requirement.  Remove once fixed upstream.
       enable-ml2-port-security: true
       flat-network-providers: physnet1
       neutron-security-groups: true
-      openstack-origin: *openstack-origin
-    channel: latest/edge
+    channel: xena/edge
   keystone:
     charm: ch:keystone
     num_units: 1
     options:
       openstack-origin: *openstack-origin
-    channel: latest/edge
+      debug: True
+    channel: xena/edge
   glance:
     charm: ch:glance
     num_units: 1
     options:
       openstack-origin: *openstack-origin
-    channel: latest/edge
+      debug: True
+    channel: xena/edge
   nova-cloud-controller:
     charm: ch:nova-cloud-controller
     num_units: 1
     options:
-      network-manager: Neutron
       openstack-origin: *openstack-origin
-    channel: latest/edge
+      debug: True
+      network-manager: Neutron
+    channel: xena/edge
   ovn-chassis:
     charm: ch:ovn-chassis
-    channel: latest/edge
+    channel: 22.03/edge
   nova-compute:
     constraints: "root-disk=20G mem=4G"
     charm: ch:nova-compute
     num_units: 2
     options:
+      openstack-origin: *openstack-origin
+      debug: True
       config-flags: default_ephemeral_format=ext4
       enable-live-migration: true
       enable-resize: true
       migration-auth-type: ssh
-      openstack-origin: *openstack-origin
-    channel: latest/edge
+    channel: xena/edge
   placement:
     charm: ch:placement
     num_units: 1
     options:
       openstack-origin: *openstack-origin
-    channel: latest/edge
+      debug: True
+    channel: xena/edge
 relations:
   - - hacluster-neutron-api:ha
     - neutron-api:ha
